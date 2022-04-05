@@ -22,3 +22,14 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### Update npm
+```
+npm install -g npm@8.6.0
+```
+
+### fix vulnerabilities
+```
+npm audit fix
+```
