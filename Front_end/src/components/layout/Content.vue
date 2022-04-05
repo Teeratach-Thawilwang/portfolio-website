@@ -109,7 +109,7 @@ export default {
   }
 }
 .sidebar {
-  animation: move 2.5s;
+  /* animation: move 2.5s; */
   animation-timing-function: ease-in-out;
   /* animation-timing-function: cubic-bezier(0.69, 2.6, 0.36, -1); */
   animation-fill-mode: forwards;
@@ -141,7 +141,7 @@ export default {
 /* Tooltip */
 .tooltip {
   position: relative;
-  display: inline;
+  /* border: 1px solid red; */
 }
 .tooltiptext {
   white-space: pre;
@@ -152,7 +152,7 @@ export default {
   border-radius: 1em;
 
   font-size: calc(0.5vw + 1vh + 1vmin);
-  margin-left: calc(0.25vw + 0.25vh + 0.25vmin);
+  margin-left: calc(5vw + 1.5vh + 1.5vmin);
   padding: calc(0.25vw + 0.25vh + 0.25vmin) calc(1vw + 1vh + 1vmin);
 
   transition: ease-in-out 0.3s;
@@ -161,6 +161,8 @@ export default {
 
   /* Position the tooltip */
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 2;
 }
 .sidebar li:hover .tooltiptext {
