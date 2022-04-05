@@ -109,7 +109,7 @@ export default {
   }
 }
 .sidebar {
-  /* animation: move 2.5s; */
+  animation: move 2.5s;
   animation-timing-function: ease-in-out;
   /* animation-timing-function: cubic-bezier(0.69, 2.6, 0.36, -1); */
   animation-fill-mode: forwards;
