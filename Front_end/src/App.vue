@@ -82,10 +82,15 @@ body::-webkit-scrollbar-thumb:hover {
   flex-direction: column;
 }
 .theme-dark{
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     to bottom left,
     rgb(60, 60, 60),
     rgb(13, 16, 23)
+  ); */
+  background-image: linear-gradient(
+    to bottom left,
+    #2C3E50,
+    #222c36
   );
 }
 .theme-white{
