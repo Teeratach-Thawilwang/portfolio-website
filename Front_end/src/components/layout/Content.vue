@@ -10,11 +10,11 @@
             </div>
           </a>
         </li>
-        <li v-for="(topic, key) in topics" :key="key">
-          <a href="#">
+        <li v-for="(topic, index) in topics" :key="index">
+          <a :href="`#topic-${index + 1}`">
             <div class="tooltip">
-              <fa-icon :icon="topic" />
-              <span class="tooltiptext">{{ key }}</span>
+              <fa-icon :icon="topic.value" />
+              <span class="tooltiptext">{{ topic.key }}</span>
             </div>
           </a>
         </li>
@@ -22,9 +22,9 @@
     </div>
     <div class="content-container">
       <router-view :theme_app="theme_app"></router-view>
+      <!-- <router-view :theme_app="theme_app"></router-view>
       <router-view :theme_app="theme_app"></router-view>
-      <router-view :theme_app="theme_app"></router-view>
-      <router-view :theme_app="theme_app"></router-view>
+      <router-view :theme_app="theme_app"></router-view> -->
     </div>
   </div>
 </template>
@@ -37,13 +37,13 @@ export default {
     return {
       themeColorNormal: "#fff",
       themeColorInvert: "#000",
-      topics: {
-        About: "hand-peace",
-        Contact: "address-card",
-        Skill: "heart",
-        Education: "graduation-cap",
-        Chat: "comment",
-      },
+      topics: [
+        { key: "About", value: "hand-peace" },
+        { key: "Contact", value: "address-card" },
+        { key: "Skill", value: "heart" },
+        { key: "Education", value: "graduation-cap" },
+        { key: "Chat", value: "comment" },
+      ],
     };
   },
   methods: {
@@ -73,6 +73,14 @@ export default {
   color: v-bind(themeColorNormal);
   /* border: 1px solid rgb(179, 255, 2); */
 }
+.unselected {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
 
 /* Sidebar */
 .sidebar-container {
@@ -86,7 +94,7 @@ export default {
   top: 50%;
   left: 0;
   transform: translate(0, -50%);
- 
+
   width: 5vw;
   text-align: center;
   font-size: calc(1vw + 1vh + 1vmin);
@@ -109,7 +117,7 @@ export default {
   }
 }
 .sidebar {
-  /* animation: move 2.5s; */
+  animation: move 2.5s;
   animation-timing-function: ease-in-out;
   /* animation-timing-function: cubic-bezier(0.69, 2.6, 0.36, -1); */
   animation-fill-mode: forwards;
@@ -174,18 +182,17 @@ export default {
 
 /* End Sidebar*/
 
-/* @media screen and (max-width: 800px) {
-  .container {
-    grid-template-columns: 8vw 92vw;
-  }
+@media screen and (max-width: 700px) {
 }
 
-@media screen and (max-width: 400px) {
-  .container {
+@media screen and (max-width: 600px) {
+  .content-app-container {
     display: block;
+    /* border: 1px solid red; */
   }
-  .pagewrap {
+  .sidebar-container {
     display: none;
+    /* border: 1px solid red; */
   }
-} */
+}
 </style>
