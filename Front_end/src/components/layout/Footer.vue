@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-app-container">
+  <div class="footer-app-container unselected">
     <p >&copy;copyright 2022 by Teeratach Thawilwang</p>
   </div>
 </template>
@@ -40,8 +40,16 @@ export default {
   align-items: center;
   /* border: 1px solid red; */
 }
+.unselected {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
 p {
-  font-size: calc(1rem + (15) * ((100vw - 375px) / (1920 - 375)));
+  font-size: calc(0.8vw + 1.5vh - 0.1vmax);
   color: v-bind(themeColorNormal)
 }
 </style>
