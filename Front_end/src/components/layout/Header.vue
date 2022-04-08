@@ -41,13 +41,11 @@
 <script>
 export default {
   name: "Header-app",
-  emits: ["theme"],
-  props: ["theme_app"],
   data() {
     return {
       clickLogin: false,
       loginStatus: false,
-      theme: "theme-dark",
+      themeMode: "dark",
       themeColor: "#fff",
       themeIcon: "sun",
     };
@@ -56,17 +54,18 @@ export default {
     changeTheme() {
       if (this.themeIcon === "sun") {
         this.themeIcon = "moon";
-        this.theme = "theme-white";
+        this.themeMode = "white";
         this.themeColor = "#000";
       } else {
         this.themeIcon = "sun";
-        this.theme = "theme-dark";
+        this.themeMode = "dark";
         this.themeColor = "#fff";
       }
+      this.$store.dispatch('changeThemeAction');
     },
   },
-  beforeUpdate() {
-    this.$emit("theme", this.theme);
+  mounted(){
+    this.loginStatus = this.$store.getters.getLoginState;
   },
 };
 </script>

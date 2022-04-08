@@ -21,7 +21,7 @@
       </ul>
     </div>
     <div class="content-container">
-      <router-view :theme_app="theme_app"></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -29,34 +29,21 @@
 <script>
 export default {
   name: "Content-app",
-  props: ["theme_app"],
   data() {
-    return {
-      themeColorNormal: "#fff",
-      themeColorInvert: "#000",
-      topics: [
-        { key: "About", value: "hand-peace" },
-        { key: "Contact", value: "address-card" },
-        { key: "Skill", value: "heart" },
-        { key: "Education", value: "graduation-cap" },
-        { key: "Chat", value: "comment" },
-      ],
-    };
+    return {};
   },
-  methods: {
-    changeTheme() {
-      if (this.theme_app === "theme-white") {
-        this.themeColorNormal = "#000";
-        this.themeColorInvert = "#fff";
-      } else {
-        this.themeColorNormal = "#fff";
-        this.themeColorInvert = "#000";
-      }
+  computed: {
+    themeColorNormal() {
+      return this.$store.getters.getThemeColorNormal;
+    },
+    themeColorInvert() {
+      return this.$store.getters.getThemeColorInvert;
+    },
+    topics() {
+      return this.$store.getters.getTopics;
     },
   },
-  beforeUpdate() {
-    this.changeTheme();
-  },
+  methods: {},
 };
 </script>
 
