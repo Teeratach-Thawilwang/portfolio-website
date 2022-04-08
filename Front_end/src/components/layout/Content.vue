@@ -22,9 +22,6 @@
     </div>
     <div class="content-container">
       <router-view :theme_app="theme_app"></router-view>
-      <!-- <router-view :theme_app="theme_app"></router-view>
-      <router-view :theme_app="theme_app"></router-view>
-      <router-view :theme_app="theme_app"></router-view> -->
     </div>
   </div>
 </template>
@@ -128,8 +125,6 @@ export default {
 .sidebar li {
   list-style: none;
   width: calc(5vw);
-  padding-top: calc(0.5vw + 0.5vh + 0.5vmin);
-  padding-bottom: calc(0.5vw + 0.5vh + 0.5vmin);
   padding-left: 3vw;
   transition: ease-in-out 0.3s;
   transform: translate(-3vw, 0);
@@ -141,8 +136,15 @@ export default {
   cursor: pointer;
 }
 .sidebar a {
+  display: block;
+  width: 100%;
+  padding-top: calc(0.5vw + 0.5vh + 0.5vmin);
+  padding-bottom: calc(0.5vw + 0.5vh + 0.5vmin);
+  padding-left: 3vw;
+  transform: translate(-3vw, 0);
   color: v-bind(themeColorNormal);
   text-decoration: none;
+  /* border: 1px solid red; */
 }
 /* End Sidebar menu */
 
