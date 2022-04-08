@@ -1,13 +1,13 @@
 <template>
-  <div :class="[containertheme]">
+  <div class="app-container" :class="[getThemeColor]">
     <div class="app-header">
-      <Header @theme="changeTheme" :theme_app="themeMode"/>
+      <Header />
     </div>
     <div class="app-content">
-      <Content :theme_app="themeMode"/>
+      <Content />
     </div>
     <div class="app-footer">
-      <Footer :theme_app="themeMode"/>
+      <Footer />
     </div>
   </div>
 </template>
@@ -21,8 +21,6 @@ export default {
   name: "app",
   data() {
     return {
-      themeMode : "theme-dark",
-      containertheme: "theme-dark"
     };
   },
   components: {
@@ -31,14 +29,12 @@ export default {
     Footer,
   },
   methods: {
-    changeTheme(value){
-      this.themeMode = value;
-      if (value === "theme-dark"){
-        this.containertheme = "app-container theme-dark"
-      }else if(value === "theme-white"){
-        this.containertheme = "app-container theme-white"
-      }
-    }
+
+  },
+  computed: {
+    getThemeColor() {
+      return this.$store.getters.getThemeColor;
+    },
   },
   mounted() {
     document.title = "Teeratach Thawilwang";
@@ -81,19 +77,10 @@ body::-webkit-scrollbar-thumb:hover {
   display: flex;
   flex-direction: column;
 }
-.theme-dark{
-  /* background-image: linear-gradient(
-    to bottom left,
-    rgb(60, 60, 60),
-    rgb(13, 16, 23)
-  ); */
-  background-image: linear-gradient(
-    to bottom left,
-    #2C3E50,
-    #222c36
-  );
+.dark {
+  background-image: linear-gradient(to bottom left, #2c3e50, #222c36);
 }
-.theme-white{
+.white {
   background-image: linear-gradient(
     to bottom left,
     rgb(255, 252, 203),
@@ -105,9 +92,6 @@ body::-webkit-scrollbar-thumb:hover {
   /* border: 1px solid rgb(88, 255, 88); */
 }
 .app-content {
-  /* flex-grow: 1;
-  flex-shrink: 0;
-  flex-basis: auto; */
   height: auto;
   min-height: 83vh;
   /* border: 2px solid white; */
