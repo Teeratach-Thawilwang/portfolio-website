@@ -2,7 +2,7 @@
   <div class="header-app-container unselected">
     <nav>
       <div class="home-icon">
-        <a href="/"><img src="../../assets/home/profile.jpg" alt="" /></a>
+        <a href="/"><img src="@/assets/home/profile.jpg" alt="" /></a>
       </div>
       <ul>
         <li><a href="/">Home</a></li>
@@ -39,32 +39,39 @@
 </template>
 
 <script>
+import { useCookies } from "vue3-cookies";
 export default {
   name: "Header-app",
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
+  },
   data() {
     return {
       clickLogin: false,
       loginStatus: false,
-      themeMode: "dark",
-      themeColor: "#fff",
       themeIcon: "sun",
     };
   },
-  methods: {
-    changeTheme() {
-      if (this.themeIcon === "sun") {
-        this.themeIcon = "moon";
-        this.themeMode = "white";
-        this.themeColor = "#000";
-      } else {
-        this.themeIcon = "sun";
-        this.themeMode = "dark";
-        this.themeColor = "#fff";
-      }
-      this.$store.dispatch('changeThemeAction');
+  computed: {
+    themeColorNormal() {
+      return this.$store.getters.getThemeColorNormal;
     },
   },
-  mounted(){
+  methods: {
+    changeTheme() {
+      if (this.$store.getters.getThemeColor === "dark") {
+        this.themeIcon = "moon";
+        this.$store.dispatch("changeThemeAction", "white");
+        this.cookies.set("themeColor", "white");
+      } else {
+        this.themeIcon = "sun";
+        this.$store.dispatch("changeThemeAction", "dark");
+        this.cookies.set("themeColor", "dark");
+      }
+    },
+  },
+  mounted() {
     this.loginStatus = this.$store.getters.getLoginState;
   },
 };
@@ -115,7 +122,7 @@ nav {
 .home-icon img:hover {
   width: 12vh;
   height: 12vh;
-  border: calc(0.15vw + 0.5vmin) solid v-bind(themeColor);
+  border: calc(0.15vw + 0.5vmin) solid v-bind(themeColorNormal);
   transform: translate(0vh, 2vh);
 }
 /* End Home icon */
@@ -132,7 +139,7 @@ nav ul {
   /* border: 1px solid red; */
 }
 nav a {
-  color: v-bind(themeColor);
+  color: v-bind(themeColorNormal);
   text-decoration: none;
   padding: calc(1vw + 1vh - 1vmax);
   margin-right: 1vw;
@@ -141,7 +148,7 @@ nav a {
   transition: ease-in-out 0.3s;
 }
 nav ul a:hover {
-  border: calc(0.15vw + 0.15vmin) solid v-bind(themeColor);
+  border: calc(0.15vw + 0.15vmin) solid v-bind(themeColorNormal);
 }
 /* End nav menu */
 
@@ -153,7 +160,7 @@ nav ul a:hover {
   /* border: 1px solid red; */
 }
 .Theme-icon {
-  color: v-bind(themeColor);
+  color: v-bind(themeColorNormal);
   padding: calc(0.7vw + 0.7vh - 0.45vmax);
   font-size: calc(0.5vw + 3vh - 0.1vmax);
   transition: ease-in-out 0.3s;
@@ -161,7 +168,7 @@ nav ul a:hover {
   border-radius: 100%;
 }
 .Theme-icon:hover {
-  border: calc(0.15vw + 0.15vmin) solid v-bind(themeColor);
+  border: calc(0.15vw + 0.15vmin) solid v-bind(themeColorNormal);
   cursor: pointer;
 }
 /* End Theme icon */
