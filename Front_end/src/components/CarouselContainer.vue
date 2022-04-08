@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import carouselSlide from "../components/CarrouselSlide.vue";
+import carouselSlide from "@/components/CarrouselSlide.vue";
 export default {
   name: "carousel-container-component",
   components: {
