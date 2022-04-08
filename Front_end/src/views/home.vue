@@ -24,7 +24,6 @@ import infoContact from "../components/subview/home/home_info_contact.vue";
 import skills from "../components/subview/home/home_skills.vue";
 export default {
   name: "view-home",
-  props: ["theme_app"],
   components: {
     aboutme,
     infoContact,
@@ -32,8 +31,6 @@ export default {
   },
   data() {
     return {
-      themeColorNormal: "#fff",
-      themeColorInvert: "#000",
       profileImages: [
         require("../assets/home/profile.jpg"),
         require("../assets/home/profile2.jpg"),
@@ -41,27 +38,21 @@ export default {
       ],
     };
   },
-  methods: {
-    changeTheme() {
-      if (this.theme_app === "theme-white") {
-        this.themeColorNormal = "#000";
-        this.themeColorInvert = "#fff";
-      } else {
-        this.themeColorNormal = "#fff";
-        this.themeColorInvert = "#000";
-      }
+  computed: {
+    themeColorNormal() {
+      return this.$store.getters.getThemeColorNormal;
+    },
+    themeColorInvert() {
+      return this.$store.getters.getThemeColorInvert;
     },
   },
-  beforeUpdate() {
-    this.changeTheme();
-  },
+  methods: {},
 };
 </script>
 
 <style>
 /* Global tag */
 hr {
-  /* height: 1px; */
   border: 1px solid v-bind(themeColorNormal);
   background-color: v-bind(themeColorNormal);
 }
@@ -69,8 +60,53 @@ a {
   text-decoration: underline;
   color: v-bind(themeColorNormal);
 }
+h1 {
+  font-size: 2.5rem;
+  font-weight: bolder;
+  text-align: left;
+}
+p {
+  padding: 1rem;
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+  word-spacing: 0px;
+}
+
+@media screen and (max-width: 1024px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
+@media screen and (max-width: 900px) {
+}
+@media screen and (max-width: 700px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  p {
+    font-size: 1rem;
+    padding: 1rem;
+    letter-spacing: 0px;
+    /* word-break: keep-all; */
+  }
+}
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+    padding: 0;
+    /* border: 1px solid red; */
+  }
+  p {
+    padding-left: 0;
+    padding-right: 0;
+    letter-spacing: 0px;
+    /* color: yellow; */
+  }
+}
 /* End Global tag */
 </style>
+
 <style scoped>
 .view-home-container {
   width: 100%;
