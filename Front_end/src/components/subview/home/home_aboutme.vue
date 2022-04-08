@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import carouselContainer from "../../CarouselContainer.vue";
+import carouselContainer from "@/components/CarouselContainer.vue";
 export default {
   name: "home-aboutme-component",
   components: {
@@ -33,9 +33,9 @@ export default {
   data() {
     return {
       profileImages: [
-        require("../../../assets/home/profile.jpg"),
-        require("../../../assets/home/profile2.jpg"),
-        require("../../../assets/home/profile3.jpg"),
+        require("@/assets/home/profile.jpg"),
+        require("@/assets/home/profile2.jpg"),
+        require("@/assets/home/profile3.jpg"),
       ],
     };
   },
