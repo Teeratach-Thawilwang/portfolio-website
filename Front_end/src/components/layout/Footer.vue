@@ -1,33 +1,24 @@
 <template>
   <div class="footer-app-container unselected">
-    <p >&copy;copyright 2022 by Teeratach Thawilwang</p>
+    <p>&copy;copyright 2022 by Teeratach Thawilwang</p>
   </div>
 </template>
 
 <script>
 export default {
   name: "Footer-app",
-  props: ["theme_app"],
   data() {
-    return {
-      themeColorNormal: "#fff",
-      themeColorInvert: "#000",
-    };
+    return {};
   },
-  methods: {
-    changeTheme() {
-      if (this.theme_app === "theme-white") {
-        this.themeColorNormal = "#000";
-        this.themeColorInvert = "#fff";
-      } else {
-        this.themeColorNormal = "#fff";
-        this.themeColorInvert = "#000";
-      }
+  computed: {
+    themeColorNormal() {
+      return this.$store.getters.getThemeColorNormal;
+    },
+    themeColorInvert() {
+      return this.$store.getters.getThemeColorInvert;
     },
   },
-  beforeUpdate() {
-    this.changeTheme();
-  },
+  methods: {},
 };
 </script>
 
@@ -50,6 +41,6 @@ export default {
 }
 p {
   font-size: calc(0.8vw + 1.5vh - 0.1vmax);
-  color: v-bind(themeColorNormal)
+  color: v-bind(themeColorNormal);
 }
 </style>
