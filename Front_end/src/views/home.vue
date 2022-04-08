@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import aboutme from "../components/subview/home/home_aboutme.vue";
-import infoContact from "../components/subview/home/home_info_contact.vue";
-import skills from "../components/subview/home/home_skills.vue";
+import aboutme from "@/components/subview/home/home_aboutme.vue";
+import infoContact from "@/components/subview/home/home_info_contact.vue";
+import skills from "@/components/subview/home/home_skills.vue";
 export default {
   name: "view-home",
   components: {
@@ -32,9 +32,9 @@ export default {
   data() {
     return {
       profileImages: [
-        require("../assets/home/profile.jpg"),
-        require("../assets/home/profile2.jpg"),
-        require("../assets/home/profile3.jpg"),
+        require("@/assets/home/profile.jpg"),
+        require("@/assets/home/profile2.jpg"),
+        require("@/assets/home/profile3.jpg"),
       ],
     };
   },
@@ -66,7 +66,7 @@ h1 {
   text-align: left;
 }
 p {
-  padding: 1rem;
+  padding: 0 1rem;
   font-size: 1.25rem;
   letter-spacing: 2px;
   word-spacing: 0px;
@@ -85,7 +85,7 @@ p {
   }
   p {
     font-size: 1rem;
-    padding: 1rem;
+    padding: 0 1rem;
     letter-spacing: 0px;
     /* word-break: keep-all; */
   }
@@ -98,8 +98,7 @@ p {
     /* border: 1px solid red; */
   }
   p {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
     letter-spacing: 0px;
     /* color: yellow; */
   }
