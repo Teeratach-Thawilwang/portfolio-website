@@ -14,6 +14,7 @@
     </div>
     <div id="topic-4" class="topic-container">
       <!-- education-container -->
+      <education></education>
     </div>
   </div>
 </template>
@@ -22,12 +23,14 @@
 import aboutme from "@/components/subview/home/home_aboutme.vue";
 import infoContact from "@/components/subview/home/home_info_contact.vue";
 import skills from "@/components/subview/home/home_skills.vue";
+import education from "@/components/subview/home/home_education.vue";
 export default {
   name: "view-home",
   components: {
     aboutme,
     infoContact,
     skills,
+    education,
   },
   data() {
     return {
