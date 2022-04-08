@@ -112,7 +112,6 @@ export default {
   /* Topic-1 Self-description */
   .self-desc h1 {
     font-size: 1.5rem;
-    /* justify-content: center; */
   }
   .self-desc p {
     font-size: 1rem;
