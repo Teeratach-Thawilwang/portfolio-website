@@ -16,21 +16,22 @@
 import Header from "@/components/layout/Header.vue";
 import Content from "@/components/layout/Content.vue";
 import Footer from "@/components/layout/Footer.vue";
-
+import { useCookies } from "vue3-cookies";
 export default {
   name: "app",
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
+  },
   data() {
-    return {
-    };
+    return {};
   },
   components: {
     Header,
     Content,
     Footer,
   },
-  methods: {
-
-  },
+  methods: {},
   computed: {
     getThemeColor() {
       return this.$store.getters.getThemeColor;
@@ -38,6 +39,10 @@ export default {
   },
   mounted() {
     document.title = "Teeratach Thawilwang";
+  },
+  beforeCreate() {
+    const color = this.cookies.get("themeColor");
+    this.$store.dispatch("changeThemeAction", color);
   },
 };
 </script>
