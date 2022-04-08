@@ -97,15 +97,15 @@ button {
   padding: 15px 2px;
   font-size: calc(2vw + 2vh - 0.5vmax);
   background-color: #000;
-  opacity: 0.4;
+  opacity: 0.2;
   border-radius: 1px;
   border: none;
 
   top: 50%;
   transform: translate(0, -50%);
 }
-button:hover {
-  opacity: 0.3;
+.carousel-frame:hover > button{
+  opacity: 0.6;
   cursor: pointer;
 }
 .prevImg {
