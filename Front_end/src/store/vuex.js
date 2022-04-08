@@ -1,31 +1,28 @@
-// import Vue from "vue"
 import Vuex from "vuex"
-
-// Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
         themeColor: "dark",
-        themeColorSet : {
-            normal : "#fff",
-            invert : "#000"
+        themeColorSet: {
+            normal: "#fff",
+            invert: "#000"
         },
-        loginState : false,
+        loginState: false,
         topics: [
             { key: "About", value: "hand-peace" },
             { key: "Contact", value: "address-card" },
             { key: "Skill", value: "heart" },
             { key: "Education", value: "graduation-cap" },
             { key: "Chat", value: "comment" },
-          ],
+        ],
     },
     mutations: {
-        changeTheme(state) {
-            if (state.themeColor === "dark") {
+        changeTheme(state, value) {
+            if (value === "white") {
                 state.themeColor = "white";
                 state.themeColorSet.normal = "#000";
                 state.themeColorSet.invert = "#fff";
-            } else {
+            } else if(value === "dark"){
                 state.themeColor = "dark"
                 state.themeColorSet.normal = "#fff";
                 state.themeColorSet.invert = "#000";
@@ -33,24 +30,24 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        changeThemeAction(context) {
-            context.commit('changeTheme');
+        changeThemeAction(context, themeColor) {
+            context.commit('changeTheme', themeColor);
         }
     },
-    getters:{
-        getThemeColor(state){
+    getters: {
+        getThemeColor(state) {
             return state.themeColor;
         },
-        getThemeColorNormal(state){
+        getThemeColorNormal(state) {
             return state.themeColorSet.normal;
         },
-        getThemeColorInvert(state){
+        getThemeColorInvert(state) {
             return state.themeColorSet.invert;
         },
-        getLoginState(state){
+        getLoginState(state) {
             return state.loginState;
         },
-        getTopics(state){
+        getTopics(state) {
             return state.topics;
         }
     },
