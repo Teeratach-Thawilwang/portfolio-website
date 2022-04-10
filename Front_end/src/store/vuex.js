@@ -10,10 +10,15 @@ export default new Vuex.Store({
         loginState: false,
         topics: [
             { key: "About", value: "hand-peace" },
-            { key: "Contact", value: "address-card" },
+            { key: "General info.", value: "address-card" },
             { key: "Skill", value: "heart" },
-            { key: "Education", value: "graduation-cap" },
+            { key: "Timeline", value: "graduation-cap" },
             { key: "Chat", value: "comment" },
+        ],
+        chat: [
+            { username: "นายA", comment: "ทักทาย" },
+            { username: "นายA", comment: "ทักทาย" },
+            
         ],
     },
     mutations: {
@@ -22,16 +27,22 @@ export default new Vuex.Store({
                 state.themeColor = "white";
                 state.themeColorSet.normal = "#000";
                 state.themeColorSet.invert = "#fff";
-            } else if(value === "dark"){
+            } else if (value === "dark") {
                 state.themeColor = "dark"
                 state.themeColorSet.normal = "#fff";
                 state.themeColorSet.invert = "#000";
             }
+        },
+        addComment(state, data) {
+            state.chat.push({ username: data.user, comment: data.text })
         }
     },
     actions: {
         changeThemeAction(context, themeColor) {
             context.commit('changeTheme', themeColor);
+        },
+        addCommentAction(context, comment) {
+            context.commit('addComment', comment);
         }
     },
     getters: {
@@ -49,6 +60,9 @@ export default new Vuex.Store({
         },
         getTopics(state) {
             return state.topics;
+        },
+        getChat(state) {
+            return state.chat;
         }
     },
     modules: {}
