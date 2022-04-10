@@ -6,49 +6,12 @@
         <hr />
       </h1>
       <table>
-        <tr>
-          <th>Nickname</th>
-          <th>Ne</th>
-        </tr>
-        <tr>
-          <th>Gender</th>
-          <th>Male</th>
-        </tr>
-        <tr>
-          <th>Nationality</th>
-          <th>Thai</th>
-        </tr>
-        <tr>
-          <th>Attitude</th>
-          <th>No nothing we can't do. We just can't do now.</th>
-        </tr>
-      </table>
-    </div>
-    <div class="info-contact">
-      <h1>
-        Contact
-        <hr />
-      </h1>
-      <table>
-        <tr>
-          <th>Phone</th>
-          <th>062-959-1812</th>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <th>Teeratach.ten@gmail.com</th>
-        </tr>
-        <tr>
-          <th>GitHub</th>
-          <th>
-            <a href="https://github.com/Teeratach-Thawilwang"
-              >Teeratach-Thawilwang</a
-            >
+        <tr v-for="(item, index) in GeneralInfo" :key="index">
+          <th>{{ item.topic }}:</th>
+          <th v-if="item.link != null">
+            <a :href="item.link">{{ item.desc }}</a>
           </th>
-        </tr>
-        <tr>
-          <th>Address</th>
-          <th>Muang Khon Kaen, Khon Kaen 40000.</th>
+          <th v-else>{{ item.desc }}</th>
         </tr>
       </table>
     </div>
@@ -59,7 +22,22 @@
 export default {
   name: "home-info-contact-component",
   data() {
-    return {};
+    return {
+      GeneralInfo: [
+        { topic: "Name", desc: "Teeratach Thawilwang" },
+        { topic: "Gender", desc: "Male" },
+        { topic: "Birthdate", desc: "02 July 1995" },
+        { topic: "Nationality", desc: "Thai" },
+        { topic: "Phone", desc: "062-959-1812" },
+        { topic: "Email", desc: "Teeratach.ten@gmail.com" },
+        {
+          topic: "GitHub",
+          desc: "Teeratach-Thawilwang",
+          link: "https://github.com/Teeratach-Thawilwang",
+        },
+        { topic: "Address", desc: "Muang Khon Kaen, Khon Kaen 40000." },
+      ],
+    };
   },
 };
 </script>
@@ -67,11 +45,15 @@ export default {
 <style scoped>
 /* Topic-2 info-contact */
 .info-contact-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 .info-contact {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 100%;
 }
 .info-contact h1 {
@@ -83,20 +65,29 @@ export default {
 }
 .info-contact table {
   width: 100%;
-  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 1rem;
   font-size: 1.25rem;
   /* border: 1px solid red; */
 }
-.info-contact tr th:first-child {
-  /* padding-left: 1rem; */
+.info-contact tr {
+  display: inline-block;
+  height: 100%;
   text-align: left;
+  width: 50%;
+  word-wrap: break-word;
+  /* border: 1px solid red; */
+}
+.info-contact tr th:first-child {
+  display: inline-block;
+  width: 30%;
   font-weight: bold;
   /* border: 1px solid red; */
 }
 .info-contact tr th:last-child {
-  padding-left: 1rem;
-  text-align: left;
+  display: inline-block;
+  width: 70%;
   font-weight: normal;
   /* border: 1px solid red; */
 }
@@ -104,24 +95,12 @@ export default {
 
 @media screen and (max-width: 1024px) {
   /* Topic-2 info-contact */
+  .info-contact {
+    width: 90%;
+  }
   .info-contact h1 {
     font-size: 2rem;
     text-align: left;
-    /* border: 1px solid red; */
-  }
-  .info-contact table {
-    font-size: 1.25rem;
-    /* border: 1px solid red; */
-  }
-  .info-contact tr th:first-child {
-    padding-left: 0rem;
-    text-align: left;
-    font-weight: bold;
-    /* border: 1px solid red; */
-  }
-  .info-contact tr th:last-child {
-    padding: 0 1rem;
-    word-wrap: none;
     /* border: 1px solid red; */
   }
   /* End Topic-2 info-contact */
@@ -129,18 +108,16 @@ export default {
 
 @media screen and (max-width: 900px) {
   /* Topic-2 info-contact */
-  .info-contact-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  .info-contact {
+    width: 90%;
+  }
+  .info-contact table {
+    width: 90%;
+    margin: 1rem auto;
     /* border: 1px solid red; */
   }
-  .info-contact {
-    margin: 1rem auto;
-    width: 80%;
-    /* margin: auto; */
+  .info-contact tr {
+    width: 100%;
   }
   /* End Topic-2 info-contact */
 }
@@ -148,17 +125,17 @@ export default {
 @media screen and (max-width: 700px) {
   /* Topic-2 info-contact */
   .info-contact {
+    width: 90%;
     margin: 0rem auto;
   }
   .info-contact h1 {
     font-size: 1.5rem;
     text-align: center;
   }
-  .info-contact tr th:first-child {
-    font-size: 1rem;
-    /* border: 1px solid red; */
+  .info-contact table {
+    width: 100%;
   }
-  .info-contact tr th:last-child {
+  .info-contact tr th {
     font-size: 1rem;
     /* border: 1px solid red; */
   }
@@ -167,18 +144,23 @@ export default {
 
 @media screen and (max-width: 600px) {
   /* Topic-2 info-contact */
-  .info-contact-container {
-    width: 100%;
-    /* border: 1px solid rgb(13, 0, 255); */
-  }
   .info-contact {
-    width: 90%;
+    width: 80%;
     /* border: 1px solid red; */
   }
   .info-contact h1 {
     font-size: 2rem;
     text-align: center;
     padding: 0;
+    /* border: 1px solid red; */
+  }
+  /* End Topic-2 info-contact */
+}
+
+@media screen and (max-width: 500px) {
+  /* Topic-2 info-contact */
+  .info-contact {
+    width: 90%;
     /* border: 1px solid red; */
   }
   /* End Topic-2 info-contact */
