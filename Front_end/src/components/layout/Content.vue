@@ -13,7 +13,7 @@
         <li v-for="(topic, index) in topics" :key="index">
           <a :href="`#topic-${index + 1}`">
             <div class="tooltip">
-              <fa-icon :icon="topic.value" />
+              <fa-icon :icon="`${index + 1}`" />
               <span class="tooltiptext">{{ topic.key }}</span>
             </div>
           </a>
@@ -81,7 +81,8 @@ export default {
 
   width: 5vw;
   text-align: center;
-  font-size: calc(1vw + 1vh + 1vmin);
+  /* font-size: calc(1vw + 0.5vh + 0.5vmin); */
+  font-size: 1.25rem;
   /* border: 1px solid rgb(13, 0, 255); */
 }
 
@@ -112,14 +113,17 @@ export default {
 .sidebar li {
   list-style: none;
   width: calc(5vw);
-  padding-left: 3vw;
-  transition: ease-in-out 0.3s;
-  transform: translate(-3vw, 0);
+  transition: ease-in-out 0.2s;
+  transform: translate(0vw, 0);
   /* border: 1px solid red; */
 }
 .sidebar li:hover {
-  font-size: calc(2.5vw + 1.5vh + 1vmin);
-  transform: translate(-0.5vw, 0);
+  cursor: pointer;
+}
+.sidebar a:hover {
+  /* font-size: calc(2.5vw + 1.5vh + 1vmin); */
+  font-size: 2rem;
+  transform: translate(0vw, 0);
   cursor: pointer;
 }
 .sidebar a {
@@ -127,11 +131,12 @@ export default {
   width: 100%;
   padding-top: calc(0.5vw + 0.5vh + 0.5vmin);
   padding-bottom: calc(0.5vw + 0.5vh + 0.5vmin);
-  padding-left: 3vw;
-  transform: translate(-3vw, 0);
+  padding-left: 2vw;
+  transform: translate(-1vw, 0);
+  transition: ease-in-out 0.3s;
   color: v-bind(themeColorNormal);
   text-decoration: none;
-  /* border: 1px solid red; */
+  /* border: 1px solid green; */
 }
 /* End Sidebar menu */
 
