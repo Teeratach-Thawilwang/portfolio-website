@@ -1,21 +1,19 @@
 <template>
-  <div class="skill-div-container">
-    <div class="skill-container">
-      <h1>
-        Skills
-        <hr />
-      </h1>
-      <div class="skill-item-container">
-        <div class="skill-item" v-for="(item, index) in skills" :key="index">
-          <div class="skil-des">
-            <span>{{ item.skill }}</span>
-            <span>{{ item.value }}</span>
-          </div>
-          <div class="progressbar">
-            <div
-              :style="{ width: item.value, backgroundColor: item.color }"
-            ></div>
-          </div>
+  <div class="skill-container">
+    <h1>
+      Skills
+      <hr />
+    </h1>
+    <div class="skill-item-container">
+      <div class="skill-item" v-for="(item, index) in skills" :key="index">
+        <div class="skil-des">
+          <span>{{ item.skill }}</span>
+          <span>{{ item.value }}</span>
+        </div>
+        <div class="progressbar">
+          <div
+            :style="{ width: item.value, backgroundColor: item.color }"
+          ></div>
         </div>
       </div>
     </div>
@@ -92,6 +90,10 @@ export default {
 
 @media screen and (max-width: 1024px) {
   /* Topic-3 skill */
+  .skill-container {
+    width: 90%;
+    margin: auto;
+  }
   .skill-container h1 {
     font-size: 2rem;
   }
@@ -100,15 +102,6 @@ export default {
 
 @media screen and (max-width: 900px) {
   /* Topic-3 skill */
-  .skill-div-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    /* border: 1px solid rgb(13, 0, 255); */
-  }
-  .skill-container {
-    width: 80%;
-  }
   /* End Topic-3 skill */
 }
 
@@ -127,7 +120,7 @@ export default {
 @media screen and (max-width: 600px) {
   /* Topic-3 skill */
   .skill-container {
-    width: 90%;
+    width: 80%;
   }
   .skill-container h1 {
     font-size: 2rem;
@@ -141,5 +134,11 @@ export default {
     /* border: 1px solid red; */
   }
   /* End Topic-3 skill */
+}
+@media screen and (max-width: 500px) {
+  /* Topic-3 skill */
+  .skill-container {
+    width: 90%;
+  }
 }
 </style>
