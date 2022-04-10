@@ -13,8 +13,12 @@
       <skills></skills>
     </div>
     <div id="topic-4" class="topic-container">
-      <!-- education-container -->
-      <education></education>
+      <!-- timeline-container -->
+      <timeline></timeline>
+    </div>
+    <div id="topic-5" class="topic-container">
+      <!-- chat-container -->
+      <chat></chat>
     </div>
   </div>
 </template>
@@ -23,14 +27,16 @@
 import aboutme from "@/components/subview/home/home_aboutme.vue";
 import infoContact from "@/components/subview/home/home_info_contact.vue";
 import skills from "@/components/subview/home/home_skills.vue";
-import education from "@/components/subview/home/home_education.vue";
+import timeline from "@/components/subview/home/home_timeline.vue";
+import chat from "@/components/subview/home/home_chat.vue";
 export default {
   name: "view-home",
   components: {
     aboutme,
     infoContact,
     skills,
-    education,
+    timeline,
+    chat
   },
   data() {
     return {
@@ -125,6 +131,9 @@ p {
   width: 90%;
   margin-top: 3rem;
   /* border: 1px solid skyblue; */
+}
+.topic-container:last-child {
+  margin-bottom: 5rem;
 }
 /* End Global Container */
 
