@@ -1,0 +1,16 @@
+{
+  "name": "back_end",
+  "version": "1.0.0",
+  "description": "Backend",
+  "main": "app.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "socket.io": "^4.4.1"
+  },
+  "scripts": {
+    "serve": "node app.js"
+  },
+  "author": "Teeratach Thawilwang",
+  "license": "ISC"
+}
