@@ -7,29 +7,58 @@
     <div class="chatbox-content">
       <div class="chatbox">
         <ul>
-          <li v-for="(item, index) in getChat" :key="index">
-            <div class="user-icon">
-              {{ item.username }}
+          <li v-for="(item, index) in commentData" :key="index">
+            <div class="comment-li-container">
+              <div class="user-icon">
+                <fa-icon icon="user-large" />
+              </div>
+              <div class="comment-li">
+                <div class="user-name">
+                  {{ item.username }}
+                </div>
+                <div class="comment-text">
+                  {{ item.comment }}
+                </div>
+              </div>
             </div>
-            <div class="comment-text">
-              {{ item.comment }}
+            <div class="comment-date">
+              {{ item.datetime }}
             </div>
+          </li>
+          <li v-for="(item, index) in userTyping" :key="index">
+            <div class="comment-li-container">
+              <div class="user-icon">
+                <fa-icon icon="user-large" />
+              </div>
+              <div class="comment-li typing">
+                <div class="user-name">
+                  {{ item }}
+                </div>
+                <div class="comment-text">Typing {{ typingPoint }}</div>
+              </div>
+            </div>
+          </li>
+          <li v-show="formError != ''" class="popup-error" :key="formErrorCnt">
+            <p>{{ formError }}</p>
           </li>
         </ul>
       </div>
       <div class="form-chat">
-        <div>
-          <input
-            type="text"
-            v-model.lazy="chatUsername"
-            placeholder="Username"
-          />
+        <input
+          type="text"
+          placeholder="Nickname"
+          maxlength="30"
+          @input="oninputUsername($event)"
+          @keydown.enter.exact.prevent="focusComment()"
+        />
+        <div class="textarea">
           <textarea
             type="text"
-            name=""
-            id=""
-            placeholder="...What do you think?"
-            v-model.lazy="inputComment"
+            placeholder="Comment..."
+            v-model="inputComment"
+            @input="onInputComment()"
+            @keydown.enter.exact.prevent="addComment"
+            @keydown.enter.shift.exact="newline"
           ></textarea>
         </div>
         <button @click="addComment">send</button>
@@ -39,41 +68,153 @@
 </template>
 
 <script>
+import getDateTimeForChat from '@/helpers/DateTime'
+const { io } = require("socket.io-client");
+const socket = io("http://192.168.199.104:8081");
 export default {
   name: "home-chat-component",
   components: {},
   data() {
     return {
-      chatUsername: "",
+      commentData: [],
+      inputUsername: "",
       inputComment: "",
+      chatUpdate: true,
+      scrollHigh: 0,
+      formError: "",
+      formErrorCnt: 0,
+      userTyping: [],
+      typingPoint: ".",
     };
   },
-  computed: {
-    themeColorNormal() {
-      return this.$store.getters.getThemeColorNormal;
+  methods: {
+    validation() {
+      if (this.inputComment === "" && this.inputUsername === "") {
+        this.formError = "Please fill your nickname and message.";
+        this.chatUpdate = true;
+        return -1;
+      }
+      if (this.inputUsername === "") {
+        this.formError = "Please fill your nickname.";
+        this.chatUpdate = true;
+        return -1;
+      }
+      if (this.inputComment === "") {
+        this.formError = "Please fill your comment.";
+        this.chatUpdate = true;
+        return -1;
+      }
+      this.chatUpdate = true;
+      return 1;
     },
-    themeColorInvert() {
-      return this.$store.getters.getThemeColorInvert;
+    addComment() {
+      this.formErrorCnt += 1;
+      if (this.formErrorCnt >= 100) this.formErrorCnt = 0;
+      if (this.validation() == -1) return;
+      const data = {
+        username: this.inputUsername,
+        comment: this.inputComment,
+        datetime: getDateTimeForChat(),
+      };
+      this.commentData.push(data);
+      socket.emit("addMessage", data);
+
+      this.formError = "";
+      this.inputComment = "";
+      this.chatUpdate = true;
     },
-    getChat() {
-      return this.$store.getters.getChat;
+    oninputUsername(event) {
+      event.target.value = event.target.value.substring(0, 30);
+      this.inputUsername = event.target.value;
+    },
+    onInputComment() {
+      const textarea = document.querySelector("textarea");
+      textarea.scrollTop = textarea.scrollHeight;
+      socket.emit("typing", { username: this.inputUsername });
+    },
+    focusComment() {
+      if (this.inputUsername === "") {
+        this.formError = "Please fill your nickname.";
+        this.chatUpdate = true;
+        return;
+      }
+      const textarea = document.querySelector(".form-chat .textarea textarea");
+      textarea.focus();
+    },
+    scrollCommentDown() {
+      const chatbox = document.querySelector('[class="chatbox"]');
+      if (chatbox.scrollTop >= this.scrollHigh - 80 || this.chatUpdate) {
+        chatbox.scrollTop = chatbox.scrollHeight;
+        this.scrollHigh = chatbox.scrollTop;
+      }
+      this.scrollHigh = chatbox.scrollHeight - chatbox.clientHeight;
+      this.chatUpdate = false;
     },
   },
-  methods: {
-    addComment() {
-      const data = { user: this.chatUsername, text: this.inputComment };
-      this.$store.dispatch("addCommentAction", data);
-      this.inputComment = "";
+  computed: {
+    ThemeColor() {
+      return this.$store.getters.getThemeColorSet;
     },
+  },
+  mounted() {
+    // console.log("on mounted");
+    this.scrollCommentDown();
+  },
+  updated() {
+    console.log("on update");
+    this.scrollCommentDown();
+  },
+  created() {
+    // console.log("on created.");
+    socket.on("connect", () => {
+      // console.log(socket.connected);
+    });
+
+    socket.on("allMessage", (data) => {
+      this.commentData.push(...data);
+    });
+
+    socket.on("userTyping", (data) => {
+      // handle username typing
+      var temp = data.username;
+      var pushFlag = true;
+      var i = 0;
+      for (i = 0; i < this.userTyping.length; i++) {
+        if (this.userTyping[i] == data.username) {
+          pushFlag = false;
+          break;
+        }
+      }
+      if (pushFlag || this.userTyping.length === 0) {
+        this.userTyping.push(temp);
+        var typingInterval = setInterval(() => {
+          this.typingPoint += ".";
+          if (this.typingPoint.length > 3) {
+            this.typingPoint = "";
+          }
+        }, 500);
+        setTimeout(() => {
+          this.userTyping.shift();
+          clearInterval(typingInterval);
+        }, 1000);
+      }
+    });
+
+    socket.on("newMessage", (data) => {
+      var temp = {
+        username: data.username,
+        comment: data.comment,
+        datetime: data.datetime,
+      };
+      setTimeout(() => {
+        this.commentData.push(temp);
+      }, 1000);
+    });
   },
 };
 </script>
 
 <style scoped>
-p {
-  color: rgb(81, 81, 81);
-}
-
 .chat-container {
   width: 100%;
   box-sizing: border-box;
@@ -82,61 +223,113 @@ p {
 
 /* Custom scrollbar*/
 .chatbox::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 .chatbox::-webkit-scrollbar-track {
   border-radius: 10px;
-  background: rgb(81, 81, 81);
+  margin-bottom: 10px;
+  /* background: v-bind('ThemeColor.scrollbarTrack'); */
 }
 .chatbox::-webkit-scrollbar-thumb {
-  background: rgb(127, 127, 127);
   border-radius: 10px;
+  background: v-bind("ThemeColor.scrollbarThumb");
 }
 .chatbox::-webkit-scrollbar-thumb:hover {
-  background: rgb(160, 160, 160);
+  background: v-bind("ThemeColor.scrollbarThumbHover");
 }
+/* End Custom scrollbar*/
+/* Chat layout */
 .chatbox-content {
   width: 80%;
-  height: 300px;
+  height: 500px;
   margin: auto;
   margin-top: 1rem;
-  border-radius: 10px;
-  background-color: #fff;
+  border-radius: 5px;
+  /* border: 1px solid v-bind("ThemeColor.chatFormBorder"); */
+  /* changeed by theme : chatboxBG*/
+  /* background: v-bind("ThemeColor.chatboxBG"); */
 }
 .chatbox {
   width: 100%;
-  height: 260px;
+  height: calc(500px - 40px);
   overflow-y: scroll;
   overflow-x: wrap;
 }
+.chatbox-content:hover {
+  /* background: #445869; */
+  filter: brightness(1.1);
+}
+/* End Chat layout */
+/* Comment-text Chat */
 .chatbox ul li {
-  font-size: 1rem;
-  padding: 0;
-  margin: 1rem;
-  height: 2rem;
-  border-radius: 10px;
-  color: #fff;
-  width: 90%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.chatbox ul li .comment-li-container {
   display: flex;
+  justify-content: left;
   align-items: center;
+  margin: 2rem 2rem 0 2rem;
+  /* border: 1px solid red; */
 }
-.chatbox ul li:nth-child(odd) .user-icon,
-.chatbox ul li:nth-child(odd) .comment-text {
-  background: #828282;
+.chatbox ul li .comment-li {
+  font-size: 1.25rem;
+  padding: 1rem 1rem;
+  margin-left: 1rem;
+  width: 100%;
+  height: 100%;
+  word-break: break-all;
+  white-space: pre;
+  list-style: none;
+  text-align: left;
+  border-radius: 20px;
+  /* changeed by theme : normal*/
+  color: v-bind("ThemeColor.normal");
+  /* changeed by theme : chatTextBG*/
+  background: v-bind("ThemeColor.chatTextBG");
 }
-.chatbox ul li:nth-child(even) .user-icon,
-.chatbox ul li:nth-child(even) .comment-text {
-  background: #4a4a4a;
+.chatbox ul li .comment-li.typing {
+  width: auto;
 }
-.user-icon,
+.user-name {
+  font-weight: bolder;
+  margin-bottom: 0.5rem;
+}
 .comment-text {
-  border-radius: 10px;
-  padding: 5px 1rem;
-  margin-right: 5px;
-  display: flex;
-  align-items: center;
+  margin-left: 0rem;
 }
-
+.user-icon {
+  font-size: 1.25rem;
+}
+.comment-date {
+  font-size: 1rem;
+}
+/* End Comment-text Chat */
+/* Input .textarea textarea Chat */
+@keyframes popupAnimation {
+  0% {
+    transform: scale(0.5, 0.5);
+  }
+  90% {
+    transform: scale(1.2, 1.2);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+.popup-error {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  word-break: break-all;
+}
+.popup-error p {
+  box-sizing: border-box;
+  color: v-bind("ThemeColor.normal");
+  animation: 0.3s popupAnimation;
+  animation-fill-mode: forwards;
+}
 .form-chat {
   position: relative;
   display: flex;
@@ -145,52 +338,82 @@ p {
   height: 40px;
   /* border: 3px solid red; */
 }
-.form-chat div input,
-.form-chat div textarea {
+.form-chat input,
+.form-chat .textarea textarea {
+  outline-width: 0px;
   position: absolute;
-  font-size: 1rem;
-  padding: 0.5rem;
+  bottom: 1px;
+  font-size: 1.25rem;
   height: 100%;
-  border-radius: 10px;
-  border: 1px solid rgb(195, 195, 195);
-  background-color: #fff;
+  border-radius: 5px;
+  /* changeed by theme : chatFormBorder*/
+  border: 1px solid v-bind("ThemeColor.chatFormBorder");
+  /* changeed by theme */
+  color: v-bind("ThemeColor.normal");
+  /* changeed by theme : chatInputBG*/
+  background-color: v-bind("ThemeColor.chatInputBG");
   resize: none;
   overflow: hidden;
-  z-index: 2;
+  z-index: 1;
 }
-.form-chat div input {
-  text-align: center;
-  width: calc(150px);
-}
-.form-chat div textarea {
-  left: 150px;
-  width: calc(100% - 150px - 60px);
-}
-.form-chat div input::placeholder,
-.form-chat div textarea::placeholder {
-  text-align: center;
+.form-chat input:focus,
+.form-chat .textarea textarea:focus {
+  /* changeed by theme : chatFormBorder*/
+  border: 1px solid v-bind("ThemeColor.normal");
 }
 .form-chat button {
   position: absolute;
-  right: 0;
+  bottom: 1px;
+  right: -1px;
+  width: 80px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 40px;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: bolder;
-  border-radius: 20px;
+  border-radius: 5px;
   border: none;
   color: #fff;
-  background-color: green;
+  background-color: #21a221;
   cursor: pointer;
+  z-index: 1;
 }
+.form-chat input {
+  outline-color: v-bind("ThemeColor.chatFormBorder");
+  text-align: center;
+  left: 0px;
+  width: calc(150px);
+}
+.form-chat .textarea textarea {
+  outline-color: v-bind("ThemeColor.chatFormBorder");
+  line-height: 2;
+  padding-left: 1rem;
+  left: calc(150px);
+  width: calc(100% - (150px) - (80px - 1px));
+}
+.form-chat input::placeholder,
+.form-chat .textarea textarea::placeholder {
+  font-size: 1.25rem;
+  line-height: 40px;
+  text-align: center;
+  color: v-bind("ThemeColor.normal"); /* changeed by theme : normal*/
+}
+.form-chat button:hover {
+  background-color: #0d890d;
+}
+/* End Input .textarea textarea Chat */
 
 @media screen and (max-width: 1024px) {
   .chat-container {
     width: 90%;
     margin: auto;
+  }
+  .chat-container h1 {
+    font-size: 2rem;
+  }
+  .chatbox-content {
+    width: 100%;
   }
 }
 
@@ -199,17 +422,67 @@ p {
 
 @media screen and (max-width: 700px) {
   .chat-container h1 {
+    font-size: 1.5rem;
     text-align: center;
+  }
+  .chatbox ul li .comment-li {
+    font-size: 1rem;
+  }
+  .form-chat input {
+    outline-width: 0px;
+    width: calc(100px);
+    transition: 1s;
+    z-index: 3;
+  }
+  .form-chat .textarea textarea {
+    outline-width: 0px;
+    left: calc(100px);
+    height: 100%;
+    width: calc(100% - (100px) - (80px - 1px));
+    transition: 1s;
+    z-index: 2;
+  }
+  .form-chat input:focus {
+    width: calc(100% - 80px);
+  }
+  .form-chat .textarea textarea:focus {
+    left: 0px;
+    width: calc(100% - (80px - 1px));
+    padding-top: calc((40px - 1rem) / 2);
+    padding-bottom: calc((40px - 1rem) / 2);
+    line-height: 1.25;
+    height: 125%;
+    z-index: 99;
+  }
+  .form-chat .textarea textarea:focus::placeholder {
+    line-height: 2;
+  }
+  .form-chat input::placeholder,
+  .form-chat .textarea textarea::placeholder {
+    font-size: 1rem;
+  }
+  .comment-date {
+    font-size: 0.7rem;
   }
 }
 @media screen and (max-width: 600px) {
   .chat-container {
     width: 80%;
   }
+  .chat-container h1 {
+    font-size: 2rem;
+  }
 }
 @media screen and (max-width: 500px) {
   .chat-container {
     width: 90%;
+  }
+  .form-chat input {
+    width: calc(80px);
+  }
+  .form-chat .textarea textarea {
+    left: 80px;
+    width: calc(100% - 80px - (80px - 1px));
   }
 }
 </style>
