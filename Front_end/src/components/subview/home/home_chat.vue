@@ -34,12 +34,12 @@
                 <div class="user-name">
                   {{ item }}
                 </div>
-                <div class="comment-text">Typing {{ typingPoint }}</div>
+                <div class="comment-text">Typing {{ typingPoint.point }}</div>
               </div>
             </div>
           </li>
           <li v-show="formError != ''" class="popup-error" :key="formErrorCnt">
-            <p>{{ formError }}</p>
+            <p>{{ formError.text }}</p>
           </li>
         </ul>
       </div>
@@ -55,7 +55,7 @@
           <textarea
             type="text"
             placeholder="Comment..."
-            v-model="inputComment"
+            v-model="formInput.comment"
             @input="onInputComment()"
             @keydown.enter.exact.prevent="addComment"
             @keydown.enter.shift.exact="newline"
@@ -68,7 +68,9 @@
 </template>
 
 <script>
-import getDateTimeForChat from '@/helpers/DateTime'
+import getDateTimeForChat from "@/helpers/DateTime";
+import {checkValueInArray, setTypingInterval} from "@/helpers/socket";
+import {validationChat} from '@/helpers/validationChat'
 const { io } = require("socket.io-client");
 const socket = io("http://192.168.199.104:8081");
 export default {
@@ -77,64 +79,44 @@ export default {
   data() {
     return {
       commentData: [],
-      inputUsername: "",
-      inputComment: "",
+      formInput : { username : "", comment: ""},
       chatUpdate: true,
-      scrollHigh: 0,
-      formError: "",
+      formError: {text : ""},
       formErrorCnt: 0,
+      scrollHigh: 0,
       userTyping: [],
-      typingPoint: ".",
+      typingPoint: { point: "." },
     };
   },
   methods: {
-    validation() {
-      if (this.inputComment === "" && this.inputUsername === "") {
-        this.formError = "Please fill your nickname and message.";
-        this.chatUpdate = true;
-        return -1;
-      }
-      if (this.inputUsername === "") {
-        this.formError = "Please fill your nickname.";
-        this.chatUpdate = true;
-        return -1;
-      }
-      if (this.inputComment === "") {
-        this.formError = "Please fill your comment.";
-        this.chatUpdate = true;
-        return -1;
-      }
-      this.chatUpdate = true;
-      return 1;
-    },
     addComment() {
       this.formErrorCnt += 1;
       if (this.formErrorCnt >= 100) this.formErrorCnt = 0;
-      if (this.validation() == -1) return;
+      if (validationChat(this.formInput, this.formError)== -1) return;
       const data = {
-        username: this.inputUsername,
-        comment: this.inputComment,
+        username: this.formInput.username,
+        comment: this.formInput.comment,
         datetime: getDateTimeForChat(),
       };
       this.commentData.push(data);
       socket.emit("addMessage", data);
 
-      this.formError = "";
-      this.inputComment = "";
+      this.formError.text = "";
+      this.formInput.comment = "";
       this.chatUpdate = true;
     },
     oninputUsername(event) {
       event.target.value = event.target.value.substring(0, 30);
-      this.inputUsername = event.target.value;
+      this.formInput.username = event.target.value;
     },
     onInputComment() {
       const textarea = document.querySelector("textarea");
       textarea.scrollTop = textarea.scrollHeight;
-      socket.emit("typing", { username: this.inputUsername });
+      socket.emit("typing", { username: this.formInput.username });
     },
     focusComment() {
-      if (this.inputUsername === "") {
-        this.formError = "Please fill your nickname.";
+      if (this.formInput.username === "") {
+        this.formError.text = "Please fill your nickname.";
         this.chatUpdate = true;
         return;
       }
@@ -161,15 +143,11 @@ export default {
     this.scrollCommentDown();
   },
   updated() {
-    console.log("on update");
+    // console.log("on update");
     this.scrollCommentDown();
   },
   created() {
     // console.log("on created.");
-    socket.on("connect", () => {
-      // console.log(socket.connected);
-    });
-
     socket.on("allMessage", (data) => {
       this.commentData.push(...data);
     });
@@ -177,22 +155,10 @@ export default {
     socket.on("userTyping", (data) => {
       // handle username typing
       var temp = data.username;
-      var pushFlag = true;
-      var i = 0;
-      for (i = 0; i < this.userTyping.length; i++) {
-        if (this.userTyping[i] == data.username) {
-          pushFlag = false;
-          break;
-        }
-      }
+      var pushFlag = checkValueInArray(this.userTyping, temp);
       if (pushFlag || this.userTyping.length === 0) {
         this.userTyping.push(temp);
-        var typingInterval = setInterval(() => {
-          this.typingPoint += ".";
-          if (this.typingPoint.length > 3) {
-            this.typingPoint = "";
-          }
-        }, 500);
+        var typingInterval = setTypingInterval(this.typingPoint)
         setTimeout(() => {
           this.userTyping.shift();
           clearInterval(typingInterval);
