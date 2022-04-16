@@ -5,7 +5,16 @@ export default new Vuex.Store({
         themeColor: "dark",
         themeColorSet: {
             normal: "#fff",
-            invert: "#000"
+            invert: "#000",
+            scrollbarTrack : "#515151",
+            scrollbarThumb : "#7F7F7F",
+            scrollbarThumbHover : "#A0A0A0",
+            chatboxBG: "#222c36",
+            chatTextBG : "#858585",
+            chatFormBorder : "#A0A0A0",
+            chatInputBG : "#404952",
+            chatBtnBG : "#21a221",
+            chatBtnBGHover : "#0D890D",
         },
         loginState: false,
         topics: [
@@ -15,11 +24,6 @@ export default new Vuex.Store({
             { key: "Timeline", value: "graduation-cap" },
             { key: "Chat", value: "comment" },
         ],
-        chat: [
-            { username: "นายA", comment: "ทักทาย" },
-            { username: "นายA", comment: "ทักทาย" },
-            
-        ],
     },
     mutations: {
         changeTheme(state, value) {
@@ -27,27 +31,39 @@ export default new Vuex.Store({
                 state.themeColor = "white";
                 state.themeColorSet.normal = "#000";
                 state.themeColorSet.invert = "#fff";
+                state.themeColorSet.scrollbarTrack = "#515151";
+                state.themeColorSet.scrollbarThumb = "#7F7F7F";
+                state.themeColorSet.scrollbarThumbHover = "#A0A0A0";
+                state.themeColorSet.chatboxBG= "#fff";
+                state.themeColorSet.chatTextBG= "#fff";
+                state.themeColorSet.chatFormBorder ="#AAA";
+                state.themeColorSet.chatInputBG ="#FFF";
             } else if (value === "dark") {
                 state.themeColor = "dark"
                 state.themeColorSet.normal = "#fff";
                 state.themeColorSet.invert = "#000";
+                state.themeColorSet.scrollbarTrack = "#515151";
+                state.themeColorSet.scrollbarThumb = "#7F7F7F";
+                state.themeColorSet.scrollbarThumbHover = "#A0A0A0";
+                state.themeColorSet.chatboxBG= "#222c36";
+                state.themeColorSet.chatTextBG= "#394856";
+                state.themeColorSet.chatFormBorder ="#A0A0A0";
+                // state.themeColorSet.chatInputBG ="#404952";
+                state.themeColorSet.chatInputBG ="#394856";
             }
         },
-        addComment(state, data) {
-            state.chat.push({ username: data.user, comment: data.text })
-        }
     },
     actions: {
         changeThemeAction(context, themeColor) {
             context.commit('changeTheme', themeColor);
         },
-        addCommentAction(context, comment) {
-            context.commit('addComment', comment);
-        }
     },
     getters: {
         getThemeColor(state) {
             return state.themeColor;
+        },
+        getThemeColorSet(state){
+            return state.themeColorSet;
         },
         getThemeColorNormal(state) {
             return state.themeColorSet.normal;
@@ -61,9 +77,6 @@ export default new Vuex.Store({
         getTopics(state) {
             return state.topics;
         },
-        getChat(state) {
-            return state.chat;
-        }
     },
     modules: {}
 })
