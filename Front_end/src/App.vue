@@ -36,6 +36,9 @@ export default {
     getThemeColor() {
       return this.$store.getters.getThemeColor;
     },
+    ThemeColorSet() {
+      return this.$store.getters.getThemeColorSet;
+    },
   },
   mounted() {
     document.title = "Teeratach Thawilwang";
@@ -60,21 +63,21 @@ export default {
   font-family: "Itim", cursive;
   src: url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Itim&family=Roboto:wght@300;400;700&display=swap");
 }
-
 /* Custom scrollbar*/
 body::-webkit-scrollbar {
   width: inherit;
 }
 body::-webkit-scrollbar-track {
-  background: rgb(81, 81, 81);
+  background: #515151;
 }
 body::-webkit-scrollbar-thumb {
-  background: rgb(127, 127, 127);
   border-radius: 10px;
+  background: #7f7f7f;
 }
 body::-webkit-scrollbar-thumb:hover {
-  background: rgb(160, 160, 160);
+  background: #a0a0a0;
 }
+/* End Custom scrollbar*/
 </style>
 
 <style scoped>
