@@ -48,7 +48,7 @@
           type="text"
           placeholder="Nickname"
           maxlength="30"
-          @input="oninputUsername($event)"
+          @input="onInputUsername($event)"
           @keydown.enter.exact.prevent="focusComment()"
         />
         <div class="textarea">
@@ -69,8 +69,8 @@
 
 <script>
 import getDateTimeForChat from "@/helpers/DateTime";
-import {checkValueInArray, setTypingInterval} from "@/helpers/socket";
-import {validationChat} from '@/helpers/validationChat'
+import { checkValueInArray, setTypingInterval } from "@/helpers/socket";
+import { validationChat } from "@/helpers/validationChat";
 const { io } = require("socket.io-client");
 const socket = io("http://192.168.199.104:8081");
 export default {
@@ -79,9 +79,9 @@ export default {
   data() {
     return {
       commentData: [],
-      formInput : { username : "", comment: ""},
+      formInput: { username: "", comment: "" },
       chatUpdate: true,
-      formError: {text : ""},
+      formError: { text: "" },
       formErrorCnt: 0,
       scrollHigh: 0,
       userTyping: [],
@@ -92,7 +92,7 @@ export default {
     addComment() {
       this.formErrorCnt += 1;
       if (this.formErrorCnt >= 100) this.formErrorCnt = 0;
-      if (validationChat(this.formInput, this.formError)== -1) return;
+      if (validationChat(this.formInput, this.formError) == -1) return;
       const data = {
         username: this.formInput.username,
         comment: this.formInput.comment,
@@ -105,7 +105,7 @@ export default {
       this.formInput.comment = "";
       this.chatUpdate = true;
     },
-    oninputUsername(event) {
+    onInputUsername(event) {
       event.target.value = event.target.value.substring(0, 30);
       this.formInput.username = event.target.value;
     },
@@ -158,7 +158,7 @@ export default {
       var pushFlag = checkValueInArray(this.userTyping, temp);
       if (pushFlag || this.userTyping.length === 0) {
         this.userTyping.push(temp);
-        var typingInterval = setTypingInterval(this.typingPoint)
+        var typingInterval = setTypingInterval(this.typingPoint);
         setTimeout(() => {
           this.userTyping.shift();
           clearInterval(typingInterval);
@@ -176,6 +176,9 @@ export default {
         this.commentData.push(temp);
       }, 1000);
     });
+  },
+  beforeUnmount() {
+    socket.disconnect();
   },
 };
 </script>
@@ -239,13 +242,16 @@ export default {
   /* border: 1px solid red; */
 }
 .chatbox ul li .comment-li {
+  display: block;
+  box-sizing: border-box;
   font-size: 1.25rem;
   padding: 1rem 1rem;
   margin-left: 1rem;
   width: 100%;
   height: 100%;
   word-break: break-all;
-  white-space: pre;
+  white-space: pre-line;
+  overflow-wrap: break-word;
   list-style: none;
   text-align: left;
   border-radius: 20px;
@@ -262,6 +268,7 @@ export default {
   margin-bottom: 0.5rem;
 }
 .comment-text {
+  overflow-wrap: break-word;
   margin-left: 0rem;
 }
 .user-icon {
