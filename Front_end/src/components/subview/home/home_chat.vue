@@ -249,7 +249,7 @@ export default {
   margin-left: 1rem;
   width: 100%;
   height: 100%;
-  word-break: break-all;
+  word-break: keep-all;
   white-space: pre-line;
   overflow-wrap: break-word;
   list-style: none;
