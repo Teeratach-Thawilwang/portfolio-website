@@ -102,6 +102,7 @@
 
 <script>
 const BServer = "http://localhost:8081/";
+// const BServer = "http://ahmacake.trueddns.com:47636/";
 import useValidate from "@vuelidate/core";
 import axios from "axios";
 import {
@@ -111,9 +112,14 @@ import {
   sameAs,
   helpers,
 } from "@vuelidate/validators";
+import { useCookies } from "vue3-cookies";
 export default {
   name: "login-conponent",
   props: ["clickLoginPopUp"],
+  setup() {
+    const { cookies } = useCookies();
+    return { cookies };
+  },
   data() {
     return {
       v$: useValidate(),
@@ -198,6 +204,12 @@ export default {
               username: res.data.account.username,
               email: res.data.account.email,
             });
+            // set cookies login
+            let loginCookies = {
+              email: res.data.account.email,
+              hashEmail: res.data.account.hashEmail,
+            };
+            this.cookies.set("session", loginCookies);
             // close login form
             this.closeLoginForm();
           })
@@ -227,6 +239,12 @@ export default {
             this.setLoginStatus(true);
             console.log("in signin success ", accData);
             this.setAccount(accData);
+            // set cookies login
+            let loginCookies = {
+              email: accData.email,
+              hashEmail: res.data.hashEmail,
+            };
+            this.cookies.set("session", loginCookies);
             // close login form
             this.closeLoginForm();
           })
