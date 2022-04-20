@@ -70,14 +70,10 @@
 
 <script>
 import getDateTimeForChat from "@/helpers/DateTime";
-import { checkValueInArray, setTypingInterval } from "@/helpers/socket";
 import { validationChat } from "@/helpers/validationChat";
-const { io } = require("socket.io-client");
-const socket = io("http://192.168.199.104:8081");
-// const socket = io("http://ahmacake.trueddns.com:47636/");
+import { checkValueInArray, setTypingInterval } from "@/helpers/socket";
 export default {
   name: "home-chat-component",
-  components: {},
   data() {
     return {
       commentData: [],
@@ -101,7 +97,7 @@ export default {
         datetime: getDateTimeForChat(),
       };
       this.commentData.push(data);
-      socket.emit("addMessage", data);
+      this.$socket.emit("addMessage", data);
 
       this.formError.text = "";
       this.formInput.comment = "";
@@ -114,7 +110,7 @@ export default {
     onInputComment() {
       const textarea = document.querySelector("textarea");
       textarea.scrollTop = textarea.scrollHeight;
-      socket.emit("typing", { username: this.formInput.username });
+      this.$socket.emit("typing", { username: this.formInput.username });
     },
     focusComment() {
       if (this.formInput.username === "") {
@@ -139,9 +135,9 @@ export default {
     ThemeColor() {
       return this.$store.getters.getThemeColorSet;
     },
-    getAccount(){
+    getAccount() {
       return this.$store.getters.getAccount;
-    }
+    },
   },
   mounted() {
     // console.log("on mounted");
@@ -153,11 +149,11 @@ export default {
   },
   created() {
     // console.log("on created.");
-    socket.on("allMessage", (data) => {
+    this.$socket.on("allMessage", (data) => {
       this.commentData.push(...data);
     });
 
-    socket.on("userTyping", (data) => {
+    this.$socket.on("userTyping", (data) => {
       // handle username typing
       var temp = data.username;
       var pushFlag = checkValueInArray(this.userTyping, temp);
@@ -171,7 +167,7 @@ export default {
       }
     });
 
-    socket.on("newMessage", (data) => {
+    this.$socket.on("newMessage", (data) => {
       var temp = {
         username: data.username,
         comment: data.comment,
@@ -183,7 +179,7 @@ export default {
     });
   },
   beforeUnmount() {
-    socket.disconnect();
+    this.$socket.disconnect();
   },
 };
 </script>
