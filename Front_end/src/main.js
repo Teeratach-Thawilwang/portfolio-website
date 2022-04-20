@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import Vuex from './store/vuex'
+import clickOutSide from '@/helpers/directives/clickOutSide'
 
 // imprt fontawesome
 import { library, dom } from "@fortawesome/fontawesome-svg-core";
@@ -17,7 +18,7 @@ const app = createApp(App);
 app.component("fa-icon", FontAwesomeIcon);
 
 // add directive
-// app.directive('click-outside', clickOutside);
+app.directive('click-outside', clickOutSide);
 
 // add necessary dependencies...
 app.use(router)
