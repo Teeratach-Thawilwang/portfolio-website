@@ -2,21 +2,25 @@ import Vuex from "vuex"
 
 export default new Vuex.Store({
     state: {
+        loginStatus: false,
+        Account: {
+            nickname: "",
+            email: "",
+        },
         themeColor: "dark",
         themeColorSet: {
             normal: "#fff",
             invert: "#000",
-            scrollbarTrack : "#515151",
-            scrollbarThumb : "#7F7F7F",
-            scrollbarThumbHover : "#A0A0A0",
+            scrollbarTrack: "#515151",
+            scrollbarThumb: "#7F7F7F",
+            scrollbarThumbHover: "#A0A0A0",
             chatboxBG: "#222c36",
-            chatTextBG : "#858585",
-            chatFormBorder : "#A0A0A0",
-            chatInputBG : "#404952",
-            chatBtnBG : "#21a221",
-            chatBtnBGHover : "#0D890D",
+            chatTextBG: "#858585",
+            chatFormBorder: "#A0A0A0",
+            chatInputBG: "#404952",
+            chatBtnBG: "#21a221",
+            chatBtnBGHover: "#0D890D",
         },
-        loginState: false,
         topics: [
             { key: "About", value: "hand-peace" },
             { key: "General info.", value: "address-card" },
@@ -34,10 +38,10 @@ export default new Vuex.Store({
                 state.themeColorSet.scrollbarTrack = "#515151";
                 state.themeColorSet.scrollbarThumb = "#7F7F7F";
                 state.themeColorSet.scrollbarThumbHover = "#A0A0A0";
-                state.themeColorSet.chatboxBG= "#fff";
-                state.themeColorSet.chatTextBG= "#fff";
-                state.themeColorSet.chatFormBorder ="#AAA";
-                state.themeColorSet.chatInputBG ="#FFF";
+                state.themeColorSet.chatboxBG = "#fff";
+                state.themeColorSet.chatTextBG = "#fff";
+                state.themeColorSet.chatFormBorder = "#AAA";
+                state.themeColorSet.chatInputBG = "#FFF";
             } else if (value === "dark") {
                 state.themeColor = "dark"
                 state.themeColorSet.normal = "#fff";
@@ -45,24 +49,37 @@ export default new Vuex.Store({
                 state.themeColorSet.scrollbarTrack = "#515151";
                 state.themeColorSet.scrollbarThumb = "#7F7F7F";
                 state.themeColorSet.scrollbarThumbHover = "#A0A0A0";
-                state.themeColorSet.chatboxBG= "#222c36";
-                state.themeColorSet.chatTextBG= "#394856";
-                state.themeColorSet.chatFormBorder ="#A0A0A0";
+                state.themeColorSet.chatboxBG = "#222c36";
+                state.themeColorSet.chatTextBG = "#394856";
+                state.themeColorSet.chatFormBorder = "#A0A0A0";
                 // state.themeColorSet.chatInputBG ="#404952";
-                state.themeColorSet.chatInputBG ="#394856";
+                state.themeColorSet.chatInputBG = "#394856";
             }
         },
+        setLogin(state, val) {
+            state.loginStatus = val;
+        },
+        setAccount(state, val) {
+            state.Account.nickname = val.username;
+            state.Account.email = val.email;
+        }
     },
     actions: {
         changeThemeAction(context, themeColor) {
             context.commit('changeTheme', themeColor);
         },
+        setLoginAction(context, val) {
+            context.commit('setLogin', val)
+        },
+        setAccountAction(context, val) {
+            context.commit('setAccount', val)
+        }
     },
     getters: {
         getThemeColor(state) {
             return state.themeColor;
         },
-        getThemeColorSet(state){
+        getThemeColorSet(state) {
             return state.themeColorSet;
         },
         getThemeColorNormal(state) {
@@ -71,12 +88,22 @@ export default new Vuex.Store({
         getThemeColorInvert(state) {
             return state.themeColorSet.invert;
         },
-        getLoginState(state) {
-            return state.loginState;
-        },
         getTopics(state) {
             return state.topics;
         },
+        getLoginStatus(state) {
+            return state.loginStatus;
+        },
+        getAccount(state) {
+            if (state.loginStatus) {
+                return state.Account
+            } else {
+                return {
+                    nickname: "",
+                    email: "",
+                }
+            }
+        }
     },
     modules: {}
 })
