@@ -61,6 +61,7 @@ export default {
     },
     setLoginStatus(val){
         this.$store.dispatch("setLoginAction", val);
+        this.cookies.remove("session");
     }
   },
   mounted() {
