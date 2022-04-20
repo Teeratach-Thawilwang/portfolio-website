@@ -101,8 +101,6 @@
 </template>
 
 <script>
-const BServer = "http://localhost:8081/";
-// const BServer = "http://ahmacake.trueddns.com:47636/";
 import useValidate from "@vuelidate/core";
 import axios from "axios";
 import {
@@ -195,7 +193,7 @@ export default {
           password: this.inputForm.password,
         };
         axios
-          .post(BServer + "login", accData)
+          .post(this.$BackendURL + "login", accData)
           .then((res) => {
             console.log("Axios login success : ", res.data);
             // login success, set login status to vuex
@@ -232,7 +230,7 @@ export default {
           password: this.inputForm.password,
         };
         axios
-          .post(BServer + "signin", accData)
+          .post(this.$BackendURL + "signin", accData)
           .then((res) => {
             console.log("Axios signin success : ", res.data);
             // signin success, set login status to vuex
