@@ -1,4 +1,4 @@
-export function checkValueInArray(dataArray, value) {
+function checkValueInArray(dataArray, value) {
     var pushFlag = true;
     var i = 0;
     for (i = 0; i < dataArray.length; i++) {
@@ -10,7 +10,7 @@ export function checkValueInArray(dataArray, value) {
     return pushFlag
 }
 
-export function setTypingInterval(typingPoint) {
+function setTypingInterval(typingPoint) {
     var typingInterval = setInterval(() => {
         typingPoint.point += ".";
         if (typingPoint.point.length > 3) {
@@ -19,3 +19,6 @@ export function setTypingInterval(typingPoint) {
     }, 500);
     return typingInterval;
 }
+
+module.exports.checkValueInArray = checkValueInArray
+module.exports.setTypingInterval = setTypingInterval
