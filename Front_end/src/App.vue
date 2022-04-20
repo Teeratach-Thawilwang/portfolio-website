@@ -106,7 +106,8 @@ body::-webkit-scrollbar-thumb:hover {
   /* border: 2px solid white; */
 }
 .app-footer {
-  height: 5vh;
+  min-height: 5vh;
+  height: auto;
   flex-shrink: 0;
   /* border: 2px solid orange; */
 }
