@@ -54,9 +54,9 @@ module.exports = {
                 socket.broadcast.emit('userTyping', { username: data.username })
             })
 
-            socket.on('disconnect', () => {
-                console.log(socket.id, 'has disconnected.')
-            })
+            // socket.on('disconnect', () => {
+            //     console.log(socket.id, 'has disconnected.')
+            // })
 
         })
 
