@@ -49,11 +49,11 @@ export default {
         },
         {
           year: 2018,
-          detail: "Graduate from Bachelor of Electrical Engineering.",
+          detail: "Graduated with Bachelor of Electrical Engineering.",
         },
         {
           year: 2019,
-          detail: "Starting work in Software Engineering (for 8 months).",
+          detail: "Start work as Software Engineering (for 8 months).",
         },
         {
           year: 2020,
