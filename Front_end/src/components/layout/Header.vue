@@ -7,55 +7,41 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/">Project</a></li>
-        <li v-if="loginStatus"><a href="#">Logout</a></li>
-        <li v-else><a href="#" @click="clickLogin = true">Login</a></li>
+        <li v-if="getLoginStatus" @click="setLoginStatus(false)"><a href="#">Logout</a></li>
+        <li v-else><a href="#" @click="clickLoginPopUp = true">Login</a></li>
       </ul>
       <div class="Theme-icon-container" @click="changeTheme">
         <fa-icon class="Theme-icon" :icon="themeIcon" />
       </div>
     </nav>
   </div>
-  <div class="login-container" :class="[clickLogin ? 'active' : '']">
-    <div class="close-btn" @click="clickLogin = false">&times;</div>
-    <p>Login</p>
-    <form action="" class="login-form">
-      <div class="form-element">
-        <span>Email</span>
-        <input type="text" id="email" placeholder="Enter email" />
-      </div>
-      <div class="form-element">
-        <span>Password</span>
-        <input type="password" id="password" placeholder="Enter password" />
-      </div>
-      <div class="form-element">
-        <input type="checkbox" id="remember_me" />
-        <span>Remember me</span>
-      </div>
-      <div class="form-element">
-        <button>login</button>
-      </div>
-    </form>
-  </div>
+  <loginComponent :clickLoginPopUp="clickLoginPopUp" @clickLoginPopUpProp="clickLoginPopUpMT" />
 </template>
 
 <script>
 import { useCookies } from "vue3-cookies";
+import loginComponent from "@/components/subview/login/login.vue";
 export default {
   name: "Header-app",
   setup() {
     const { cookies } = useCookies();
     return { cookies };
   },
+  components: {
+    loginComponent,
+  },
   data() {
     return {
-      clickLogin: false,
-      loginStatus: false,
+      clickLoginPopUp: false,
       themeIcon: "sun",
     };
   },
   computed: {
     themeColorNormal() {
       return this.$store.getters.getThemeColorNormal;
+    },
+    getLoginStatus() {
+      return this.$store.getters.getLoginStatus;
     },
   },
   methods: {
@@ -70,6 +56,12 @@ export default {
         this.cookies.set("themeColor", "dark");
       }
     },
+    clickLoginPopUpMT(value) {
+      this.clickLoginPopUp = value;
+    },
+    setLoginStatus(val){
+        this.$store.dispatch("setLoginAction", val);
+    }
   },
   mounted() {
     this.loginStatus = this.$store.getters.getLoginState;
@@ -172,80 +164,4 @@ nav ul a:hover {
   cursor: pointer;
 }
 /* End Theme icon */
-
-/* Login Form */
-.login-container {
-  position: fixed;
-  top: -150%;
-  left: 50%;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.25);
-  width: 380px;
-  padding: 20px 30px;
-  box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
-  border-radius: 10px;
-  z-index: 2;
-}
-.login-container.active {
-  top: 50%;
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  transition: top 0ms ease-in-out 0ms, opacity 200ms ease-in-out 0ms,
-    transform 20ms ease-in-out 0ms;
-}
-.login-container p {
-  font-size: 24px;
-  color: #222;
-  font-weight: bold;
-  text-align: center;
-  margin: 10px 0px 20px;
-  /* border: 1px solid red; */
-}
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  height: 15px;
-  width: 15px;
-  text-align: center;
-  line-height: 15px;
-  font-size: 24px;
-  color: rgb(68, 68, 68);
-  cursor: pointer;
-  /* border: 1px solid red; */
-}
-.form-element {
-  margin: 15px 0px;
-  /* border: 1px solid red; */
-}
-.form-element span {
-  font-size: 14px;
-  color: #222;
-}
-.form-element input[type="text"],
-.form-element input[type="password"] {
-  margin-top: 5px;
-  display: block;
-  padding: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  outline: none;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-}
-.form-element input[type="checkbox"] {
-  margin-right: 5px;
-}
-.form-element button {
-  width: 100%;
-  height: 40px;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  background-color: #222;
-  color: #f5f5f5;
-  border-radius: 10px;
-  cursor: pointer;
-}
 </style>
