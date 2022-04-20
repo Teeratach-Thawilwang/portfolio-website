@@ -58,6 +58,10 @@ export default new Vuex.Store({
         },
         setLogin(state, val) {
             state.loginStatus = val;
+            if (val == false) {
+                state.Account.nickname = '';
+                state.Account.email = '';
+            }
         },
         setAccount(state, val) {
             state.Account.nickname = val.username;
