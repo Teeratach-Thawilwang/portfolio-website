@@ -9,7 +9,7 @@ module.exports = {
             }
         })
         io.on('connection', (socket) => {
-            console.log(socket.id, ' connected.')
+            // console.log(socket.id, ' connected.')
 
             // emit to client connection
             // get data from database
