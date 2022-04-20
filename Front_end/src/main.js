@@ -20,6 +20,14 @@ app.component("fa-icon", FontAwesomeIcon);
 // add directive
 app.directive('click-outside', clickOutSide);
 
+// add global variable
+const { io } = require("socket.io-client");
+const BackendURL = 'http://192.168.199.104:35001/'
+// const BackendURL = 'http://ahmacake.trueddns.com:47636/'
+const socket = io(BackendURL);
+app.config.globalProperties.$socket = socket;
+app.config.globalProperties.$BackendURL = BackendURL;
+
 // add necessary dependencies...
 app.use(router)
 app.use(Vuex)
