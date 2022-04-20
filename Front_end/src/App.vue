@@ -13,10 +13,14 @@
 </template>
 
 <script>
+const BServer = "http://localhost:8081/";
+// const BServer = "http://ahmacake.trueddns.com:47636/";
+
 import Header from "@/components/layout/Header.vue";
 import Content from "@/components/layout/Content.vue";
 import Footer from "@/components/layout/Footer.vue";
 import { useCookies } from "vue3-cookies";
+import axios from "axios";
 export default {
   name: "app",
   setup() {
@@ -31,7 +35,30 @@ export default {
     Content,
     Footer,
   },
-  methods: {},
+  methods: {
+    checkCookiesLogin() {
+      // check login cookies {email : -, hashEmail : -}
+      let session = this.cookies.get("session");
+      if (session) {
+        axios
+          .post(BServer + "checkLogin", session)
+          .then((res) => {
+            this.setLogin(true);
+            this.setAccount(res.data.account);
+          })
+          .catch((err) => {
+            console.log("check cookies error ", err.response.data);
+            this.setLogin(false);
+          });
+      }
+    },
+    setLogin(val) {
+      this.$store.dispatch("setLoginAction", val);
+    },
+    setAccount(val) {
+      this.$store.dispatch("setAccountAction", val);
+    },
+  },
   computed: {
     getThemeColor() {
       return this.$store.getters.getThemeColor;
@@ -46,6 +73,9 @@ export default {
   beforeCreate() {
     const color = this.cookies.get("themeColor");
     this.$store.dispatch("changeThemeAction", color);
+  },
+  created() {
+    this.checkCookiesLogin();
   },
 };
 </script>
