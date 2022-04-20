@@ -47,6 +47,7 @@
         <input
           type="text"
           placeholder="Nickname"
+          :value="getAccount.nickname"
           maxlength="30"
           @input="onInputUsername($event)"
           @keydown.enter.exact.prevent="focusComment()"
@@ -73,6 +74,7 @@ import { checkValueInArray, setTypingInterval } from "@/helpers/socket";
 import { validationChat } from "@/helpers/validationChat";
 const { io } = require("socket.io-client");
 const socket = io("http://192.168.199.104:8081");
+// const socket = io("http://ahmacake.trueddns.com:47636/");
 export default {
   name: "home-chat-component",
   components: {},
@@ -137,6 +139,9 @@ export default {
     ThemeColor() {
       return this.$store.getters.getThemeColorSet;
     },
+    getAccount(){
+      return this.$store.getters.getAccount;
+    }
   },
   mounted() {
     // console.log("on mounted");
