@@ -13,9 +13,6 @@
 </template>
 
 <script>
-const BServer = "http://localhost:8081/";
-// const BServer = "http://ahmacake.trueddns.com:47636/";
-
 import Header from "@/components/layout/Header.vue";
 import Content from "@/components/layout/Content.vue";
 import Footer from "@/components/layout/Footer.vue";
@@ -37,11 +34,12 @@ export default {
   },
   methods: {
     checkCookiesLogin() {
+      console.log('global ', this.$BackendURL)
       // check login cookies {email : -, hashEmail : -}
       let session = this.cookies.get("session");
       if (session) {
         axios
-          .post(BServer + "checkLogin", session)
+          .post(this.$BackendURL + "checkLogin", session)
           .then((res) => {
             this.setLogin(true);
             this.setAccount(res.data.account);
