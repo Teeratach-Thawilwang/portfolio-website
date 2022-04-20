@@ -19,12 +19,12 @@ app.use((req, res, next) => {
     next(createError(404));
 });
 
-// set port 
-app.set('port', process.env.PORT || 8081);
-// app.set('port', process.env.PORT || 35001);
+// set port
+const listenPort = 35001
+app.set('port', process.env.PORT || listenPort);
 
 // starting http server
-const httpServer = app.listen(8081, () => {
+const httpServer = app.listen(listenPort, () => {
     console.log('Backend Server start at', '\x1b[36m', 'http://localhost:' + app.get('port') + '/', '\x1b[0m');
 })
 
