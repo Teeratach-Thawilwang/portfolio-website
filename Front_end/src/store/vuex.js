@@ -107,7 +107,7 @@ export default new Vuex.Store({
                     email: "",
                 }
             }
-        }
+        },
     },
     modules: {}
 })
