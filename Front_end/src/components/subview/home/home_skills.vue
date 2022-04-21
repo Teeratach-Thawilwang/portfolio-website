@@ -8,7 +8,7 @@
       <div class="skill-item" v-for="(item, index) in skills" :key="index">
         <div class="skil-des">
           <span>{{ item.skill }}</span>
-          <span>{{ item.value }}</span>
+          <span>{{ item.quality }}</span>
         </div>
         <div class="progressbar">
           <div
@@ -26,17 +26,63 @@ export default {
   data() {
     return {
       skills: [
-        { skill: "HTML", value: "80%", color: "rgb(0,128,0,0.6)" },
-        { skill: "Javascript", value: "60%", color: "rgb(255,165,0,0.6)" },
-        { skill: "CSS", value: "70%", color: "rgb(0, 89, 255, 0.6)" },
-        { skill: "VueJs", value: "60%", color: "rgb(255,0,0,0.6)" },
-        { skill: "PHP-Laravel", value: "60%", color: "rgb(255,165,0,0.6)" },
-        { skill: "SQL", value: "60%", color: "rgb(0,128,0,0.6)" },
-        { skill: "MongoDB", value: "60%", color: "rgb(255,0,0,0.6)" },
-        { skill: "C/C++", value: "90%", color: "rgb(255,0,0,0.6)" },
-        { skill: "Python", value: "90%", color: "rgb(0, 89, 255, 0.6)" },
+        {
+          skill: "HTML",
+          quality: "Good",
+          value: "80%",
+          color: "rgb(0,128,0,0.6)",
+        },
+        {
+          skill: "Javascript",
+          quality: "Good",
+          value: "60%",
+          color: "rgb(255,165,0,0.6)",
+        },
+        {
+          skill: "CSS",
+          quality: "Good",
+          value: "70%",
+          color: "rgb(0, 89, 255, 0.6)",
+        },
+        {
+          skill: "VueJs",
+          quality: "Good",
+          value: "60%",
+          color: "rgb(255,0,0,0.6)",
+        },
+        {
+          skill: "PHP-Laravel",
+          quality: "intermediate",
+          value: "60%",
+          color: "rgb(255,165,0,0.6)",
+        },
+        {
+          skill: "SQL",
+          quality: "Good",
+          value: "60%",
+          color: "rgb(0,128,0,0.6)",
+        },
+        {
+          skill: "MongoDB",
+          quality: "Good",
+          value: "60%",
+          color: "rgb(255,0,0,0.6)",
+        },
+        {
+          skill: "C/C++",
+          quality: "Excellent",
+          value: "90%",
+          color: "rgb(255,0,0,0.6)",
+        },
+        {
+          skill: "Python",
+          quality: "Good",
+          value: "80%",
+          color: "rgb(0, 89, 255, 0.6)",
+        },
         {
           skill: "Machine Learning",
+          quality: "Good",
           value: "70%",
           color: "rgb(255,165,0,0.6)",
         },
