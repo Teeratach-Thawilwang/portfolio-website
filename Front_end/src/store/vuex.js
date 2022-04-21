@@ -21,13 +21,7 @@ export default new Vuex.Store({
             chatBtnBG: "#21a221",
             chatBtnBGHover: "#0D890D",
         },
-        topics: [
-            { key: "About", value: "hand-peace" },
-            { key: "General info.", value: "address-card" },
-            { key: "Skill", value: "heart" },
-            { key: "Timeline", value: "graduation-cap" },
-            { key: "Chat", value: "comment" },
-        ],
+        topics: [],
     },
     mutations: {
         changeTheme(state, value) {
@@ -66,6 +60,9 @@ export default new Vuex.Store({
         setAccount(state, val) {
             state.Account.nickname = val.username;
             state.Account.email = val.email;
+        },
+        setTopic(state, val){
+            state.topics = val
         }
     },
     actions: {
@@ -77,6 +74,9 @@ export default new Vuex.Store({
         },
         setAccountAction(context, val) {
             context.commit('setAccount', val)
+        },
+        setTopicAction(context, val){
+            context.commit('setTopic', val)
         }
     },
     getters: {
