@@ -161,7 +161,6 @@ export default {
             sameAs(this.inputForm.password)
           ),
         },
-        remember: false,
       },
     };
   },
@@ -203,11 +202,13 @@ export default {
               email: res.data.account.email,
             });
             // set cookies login
-            let loginCookies = {
-              email: res.data.account.email,
-              hashEmail: res.data.account.hashEmail,
-            };
-            this.cookies.set("session", loginCookies);
+            if (this.inputForm.remember) {
+              let loginCookies = {
+                email: res.data.account.email,
+                hashEmail: res.data.account.hashEmail,
+              };
+              this.cookies.set("session", loginCookies);
+            }
             // close login form
             this.closeLoginForm();
           })
@@ -238,11 +239,13 @@ export default {
             console.log("in signin success ", accData);
             this.setAccount(accData);
             // set cookies login
-            let loginCookies = {
-              email: accData.email,
-              hashEmail: res.data.hashEmail,
-            };
-            this.cookies.set("session", loginCookies);
+            if (this.inputForm.remember) {
+              let loginCookies = {
+                email: accData.email,
+                hashEmail: res.data.hashEmail,
+              };
+              this.cookies.set("session", loginCookies);
+            }
             // close login form
             this.closeLoginForm();
           })
