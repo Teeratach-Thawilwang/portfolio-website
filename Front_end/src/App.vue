@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     checkCookiesLogin() {
-      console.log('global ', this.$BackendURL)
       // check login cookies {email : -, hashEmail : -}
       let session = this.cookies.get("session");
       if (session) {
