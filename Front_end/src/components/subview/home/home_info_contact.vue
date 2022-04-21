@@ -29,7 +29,7 @@ export default {
         { topic: "Birthdate", desc: "02 July 1995" },
         { topic: "Nationality", desc: "Thai" },
         { topic: "Phone", desc: "062-959-1812" },
-        { topic: "Email", desc: "Teeratach.ten@gmail.com" },
+        { topic: "Email", desc: "ten.teeratach@gmail.com" },
         {
           topic: "GitHub",
           desc: "Teeratach-Thawilwang",
