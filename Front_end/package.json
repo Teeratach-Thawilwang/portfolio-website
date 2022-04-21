@@ -16,6 +16,7 @@
     "@vuelidate/core": "^2.0.0-alpha.40",
     "@vuelidate/validators": "^2.0.0-alpha.28",
     "axios": "^0.26.1",
+    "chart.js": "^3.6.2",
     "core-js": "^3.8.3",
     "socket.io-client": "^4.4.1",
     "vue": "^3.2.13",
