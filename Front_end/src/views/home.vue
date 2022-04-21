@@ -36,7 +36,7 @@ export default {
     infoContact,
     skills,
     timeline,
-    chat
+    chat,
   },
   data() {
     return {
@@ -55,7 +55,21 @@ export default {
       return this.$store.getters.getThemeColorInvert;
     },
   },
-  methods: {},
+  methods: {
+    setSidebarTopic() {
+      let topic = [
+        { key: "About", value: "hand-peace" },
+        { key: "General info.", value: "address-card" },
+        { key: "Skill", value: "heart" },
+        { key: "Timeline", value: "graduation-cap" },
+        { key: "Chat", value: "comment" },
+      ];
+      this.$store.dispatch("setTopicAction", topic);
+    },
+  },
+  created() {
+    this.setSidebarTopic();
+  },
 };
 </script>
 
