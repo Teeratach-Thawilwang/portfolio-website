@@ -47,7 +47,7 @@
         <input
           type="text"
           placeholder="Nickname"
-          :value="getAccount.nickname"
+          v-model="formInput.username"
           maxlength="30"
           @input="onInputUsername($event)"
           @keydown.enter.exact.prevent="focusComment()"
@@ -139,6 +139,13 @@ export default {
       return this.$store.getters.getAccount;
     },
   },
+  watch: {
+    getAccount(val) {
+      if (val !== "") {
+        this.formInput.username = val.nickname;
+      }
+    },
+  },
   mounted() {
     // console.log("on mounted");
     this.scrollCommentDown();
@@ -149,6 +156,10 @@ export default {
   },
   created() {
     // console.log("on created.");
+    this.$socket.on("connect", () => {
+      this.commentData = [];
+    });
+
     this.$socket.on("allMessage", (data) => {
       this.commentData.push(...data);
     });
