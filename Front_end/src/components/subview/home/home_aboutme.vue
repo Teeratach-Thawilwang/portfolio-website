@@ -12,8 +12,7 @@
       </p>
       <p>
         Now, I am studying master's degree in computer science and researching
-        the topic of Fake News detection by applying Machine learning. You can
-        see detail in the Project.
+        the topic of Fake News detection by applying Machine learning.
       </p>
       <p>
         I have self-learning skills and a mindset to learn new skills as a
