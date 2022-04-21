@@ -6,7 +6,7 @@
       </div>
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/">Project</a></li>
+        <li><a href="/project">Project</a></li>
         <li v-if="getLoginStatus" @click="setLoginStatus(false)"><a href="#">Logout</a></li>
         <li v-else><a href="#" @click="clickLoginPopUp = true">Login</a></li>
       </ul>
