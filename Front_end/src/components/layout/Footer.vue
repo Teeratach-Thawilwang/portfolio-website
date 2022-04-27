@@ -1,7 +1,7 @@
 <template>
   <div class="footer-app-container unselected">
-    <p>&copy;copyright 2022 by Teeratach Thawilwang.</p>
-    <p>
+    <p class="fs-small">&copy;copyright 2022 by Teeratach Thawilwang.</p>
+    <p class="fs-small">
       The website source code is available <a :href="linkSourceCode">here</a>.
     </p>
   </div>
@@ -29,6 +29,8 @@ export default {
 </script>
 
 <style scoped>
+@import "@/assets/css/font.css";
+
 .footer-app-container {
   box-sizing: border-box;
   min-height: inherit;
@@ -47,36 +49,20 @@ export default {
   user-select: none;
 }
 p {
-  font-size: 1.25rem;
   color: v-bind(themeColorNormal);
 }
 
 @media screen and (max-width: 1024px) {
-  p {
-    font-size: 1.25rem;
-  }
 }
 @media screen and (max-width: 900px) {
-  p {
-    font-size: 1.25rem;
-  }
-}
-@media screen and (max-width: 700px) {
   .footer-app-container {
     flex-direction: column;
   }
-  p {
-    font-size: 1rem;
-  }
+}
+@media screen and (max-width: 700px) {
 }
 @media screen and (max-width: 600px) {
-  p {
-    font-size: 1rem;
-  }
 }
 @media screen and (max-width: 500px) {
-  p {
-    font-size: 1rem;
-  }
 }
 </style>
