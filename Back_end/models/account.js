@@ -3,23 +3,23 @@ const mongoose = require('mongoose')
 
 // connect to mongodb
 const dburl = "mongodb://localhost:27017/realtime-chat";
-mongoose.connect(dburl, {
+const accountClient = mongoose.createConnection(dburl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).catch(err => console.log(err))
-
+})
 
 // design schema
 let chatSchema = mongoose.Schema({
     username: String,
     email: String,
-    password: String
+    password: String,
+    isAdmin: { type: Boolean, default: false },
 }, { timestamps: {} })
 
 // create model
-let account = mongoose.model("account", chatSchema)
+let account = accountClient.model("account", chatSchema)
 
-// create insert method 
+// create save method 
 function saveAccount(model, data) {
     model.save(data)
 }
