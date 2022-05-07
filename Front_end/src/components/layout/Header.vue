@@ -8,7 +8,9 @@
         <li><a href="/">Home</a></li>
         <li><a href="/research">Research</a></li>
         <li v-if="getLoginStatus"><a href="/label">Label</a></li>
-        <li v-if="getLoginStatus" @click="setLoginStatus(false)"><a href="#">Logout</a></li>
+        <li v-if="getLoginStatus" @click="setLoginStatus(false)">
+          <a href="#">Logout</a>
+        </li>
         <li v-else><a href="#" @click="clickLoginPopUp = true">Login</a></li>
       </ul>
       <div class="Theme-icon-container" @click="changeTheme">
@@ -16,7 +18,10 @@
       </div>
     </nav>
   </div>
-  <loginComponent :clickLoginPopUp="clickLoginPopUp" @clickLoginPopUpProp="clickLoginPopUpMT" />
+  <loginComponent
+    :clickLoginPopUp="clickLoginPopUp"
+    @clickLoginPopUpProp="clickLoginPopUpMT"
+  />
 </template>
 
 <script>
@@ -60,10 +65,10 @@ export default {
     clickLoginPopUpMT(value) {
       this.clickLoginPopUp = value;
     },
-    setLoginStatus(val){
-        this.$store.dispatch("setLoginAction", val);
-        this.cookies.remove("session");
-    }
+    setLoginStatus(val) {
+      this.$store.dispatch("setLoginAction", val);
+      this.cookies.remove("session");
+    },
   },
   mounted() {
     this.loginStatus = this.$store.getters.getLoginState;
@@ -166,4 +171,14 @@ nav ul a:hover {
   cursor: pointer;
 }
 /* End Theme icon */
+@media screen and (max-width: 500px) {
+  nav {
+    height: 12vh;
+    display: grid;
+    grid-template-columns: 90fr 10fr;
+  }
+  .home-icon {
+    display: none;
+  }
+}
 </style>
