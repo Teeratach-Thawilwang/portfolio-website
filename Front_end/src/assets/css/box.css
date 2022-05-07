@@ -119,6 +119,15 @@
 }
 
 /* Border */
+.b-collapse{
+  border-collapse: collapse;
+}
+.b-1-black {
+  border: 1px solid black;
+}
+.b-1-white {
+  border: 1px solid white;
+}
 .b-1-red {
   border: 1px solid red;
 }
