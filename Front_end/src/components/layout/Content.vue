@@ -22,6 +22,11 @@
     </div>
     <div class="content-container">
       <router-view></router-view>
+      <div class="move-top-bottom" @click="scrollScreen()">
+        <fa-icon
+          :icon="moveTopBottom ? 'angle-double-up' : 'angle-double-down'"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -30,7 +35,9 @@
 export default {
   name: "Content-app",
   data() {
-    return {};
+    return {
+      moveTopBottom: false,
+    };
   },
   computed: {
     themeColorNormal() {
@@ -43,7 +50,16 @@ export default {
       return this.$store.getters.getTopics;
     },
   },
-  methods: {},
+  methods: {
+    scrollScreen() {
+      if (this.moveTopBottom) {
+        window.scrollTo(0, 0);
+      } else {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+      this.moveTopBottom = !this.moveTopBottom;
+    },
+  },
 };
 </script>
 
@@ -176,6 +192,21 @@ export default {
 
 /* End Sidebar*/
 
+/* Arrow move top-bottom */
+.move-top-bottom {
+  display: none;
+  position: fixed;
+  bottom: 50px;
+  right: 10px;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+.move-top-bottom:hover {
+  color: #000;
+  background-color: #fff;
+}
+
 @media screen and (max-width: 700px) {
 }
 
@@ -187,6 +218,9 @@ export default {
   .sidebar-container {
     display: none;
     /* border: 1px solid red; */
+  }
+  .move-top-bottom {
+    display: block;
   }
 }
 </style>
