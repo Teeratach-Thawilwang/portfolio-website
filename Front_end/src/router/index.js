@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // import component
 import home from "../views/home.vue"
-import project from "../views/project.vue"
+import research from "../views/research.vue"
+import label from "../views/label.vue"
+import labelpost from "../views/labelpost.vue"
 
 const routes = [
   {
@@ -11,9 +13,20 @@ const routes = [
     component: home,
   },
   {
-    path: "/project",
-    name: "project",
-    component: project,
+    path: "/research",
+    name: "research",
+    component: research,
+  },
+  {
+    path: "/label",
+    name: "label",
+    component: label,
+  },
+  {
+    path: "/labelpost",
+    name: "labelpost",
+    component: labelpost,
+    props: (route) => ({ param: route.query }),  
   },
 ];
 
