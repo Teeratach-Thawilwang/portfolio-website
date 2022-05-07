@@ -4,7 +4,7 @@
       <div class="chart-container">
         <canvas id="topic2-chart-2"></canvas>
       </div>
-      <p class="fs-normal text-center">Fake News histogram</p>
+      <p class="fs-normal text-center">Fake news Histogram</p>
     </div>
   </div>
 </template>
