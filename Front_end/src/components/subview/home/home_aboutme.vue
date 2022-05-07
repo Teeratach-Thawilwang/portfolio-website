@@ -38,6 +38,7 @@ export default {
         require("@/assets/home/profile.jpg"),
         require("@/assets/home/profile2.jpg"),
         require("@/assets/home/profile3.jpg"),
+        require("@/assets/home/profile4.jpg"),
       ],
     };
   },
