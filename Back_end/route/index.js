@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router();
+const fs = require('fs')
+const path = require('path');
 
 // import chat model
 var accountCL = require('../models/account');
@@ -161,6 +163,43 @@ router.post('/label/update', async (req, res) => {
     } else {
         res.status(500).json({ error: 'Cannot update.' })
     }
+})
+
+router.get('/html', (req, res) => {
+    const body = req.query
+    const filePath = `../../data/html/post_url_${body.page_name}_posts_${body.post_id}.html`
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            res.status(401).json({ error: "No such file or directory" })
+        } else {
+            res.set('Content-Type', 'text/html');
+            res.send(data.toString())
+        }
+    })
+})
+
+router.get('/getPostImage/:post_id', async (req, res) => {
+    const body = req.params
+    const filePath = `../../data/image/`
+    const fileName = `_postID_${body.post_id}_`
+    const fileNameList = []
+    fs.readdirSync(filePath).forEach(file => {
+        if (file.includes(fileName)) {
+            fileNameList.push(file)
+        }
+        return
+    });
+    res.status(200).json({ image: fileNameList })
+})
+
+router.get('/postImage/:filename', async (req, res) => {
+    const body = req.params
+    const filePath = `../../data/image/` + body.filename
+    res.status(404).sendFile(path.resolve(filePath), (err) => {
+        if (err) {
+            res.status(401).json({ error: "No such file or directory" })
+        }
+    })
 })
 
 module.exports = router;
