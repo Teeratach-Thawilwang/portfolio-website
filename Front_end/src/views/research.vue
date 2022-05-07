@@ -1,5 +1,5 @@
 <template>
-  <div class="view-project-container">
+  <div class="view-research-container">
     <div id="topic-1" class="content-container">
       <h1 class="text-header">
         Research Detail (uncomplete)
@@ -25,7 +25,7 @@
         Dataset Overview (mock data)
         <hr />
       </h1>
-      <div class="d-grid2-1-1 d-block-900px ">
+      <div class="d-grid2-1-1 d-block-900px">
         <chart1Component />
         <chart2Component />
       </div>
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import chart1Component from "@/components/subview/project/chart1.vue";
-import chart2Component from "@/components/subview/project/chart2.vue";
+import chart1Component from "@/components/subview/research/chart1.vue";
+import chart2Component from "@/components/subview/research/chart2.vue";
 export default {
   name: "project-component",
   components: {
@@ -43,14 +43,7 @@ export default {
     chart2Component,
   },
   data() {
-    return {
-      topic2: {
-        xValue: ["Fake", "Real"],
-        yValue: [2315, 7854],
-        barColors: ["#b91d47", "#2b5797"],
-      },
-      topic2Chart: null,
-    };
+    return {};
   },
   computed: {
     themeColorNormal() {
@@ -81,7 +74,6 @@ export default {
 @import "@/assets/css/font.css";
 @import "@/assets/css/layout.css";
 @import "@/assets/css/box.css";
-
 hr {
   border: 1px solid v-bind(themeColorNormal);
   background-color: v-bind(themeColorNormal);
@@ -90,8 +82,7 @@ a {
   text-decoration: underline;
   color: v-bind(themeColorNormal);
 }
-
-.view-project-container {
+.view-research-container {
   display: block;
   width: 100%;
   margin-bottom: 5rem;
