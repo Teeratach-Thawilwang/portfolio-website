@@ -4,11 +4,17 @@
       <div v-if="posts != null">
         <div class="header-post">
           <div>
-            <p>{{ posts.page_name }}</p>
+            <p class="fs-big">{{ posts.page_name }}</p>
             <p>{{ posts.post_time }}</p>
           </div>
           <ul>
-            <li><a :href="posts.url" target="_blank">HTML</a></li>
+            <li>
+              <a
+                :href="`${$BackendURL}html?page_name=${posts.page_name}&post_id=${posts.post_id}`"
+                target="_blank"
+                >HTML</a
+              >
+            </li>
             <li><a :href="posts.url" target="_blank">Link</a></li>
           </ul>
         </div>
@@ -16,11 +22,11 @@
         <div class="content-post">
           {{ posts.post_text }}
         </div>
-        <div class="image-post">
-          <img
-            src="https://scontent.fbkk27-1.fna.fbcdn.net/v/t39.30808-6/254267285_3044259815789400_2390815700095365136_n.png?stp=dst-png_s1080x2048&_nc_cat=100&ccb=1-6&_nc_sid=730e14&_nc_eui2=AeH6P1SjQQTe4bPgJPAqSmkU39O7nBLHHlff07ucEsceV1RBz_37btKvFB5mPevGqR45tY8XsA7vfr1OR438w4Jv&_nc_ohc=xdWiIVo-k-AAX_2LQCj&_nc_ht=scontent.fbkk27-1.fna&oh=00_AT981jGYoHUrQi4mf2YfPG8UqDPpr1eCuUOtt-L6EUBhrw&oe=6279732D"
-            alt=""
-          />
+        <div class="image-post" v-if="image != null">
+          <imageCarouselGeneral
+            :Images="image"
+            class="image-Carousel"
+          ></imageCarouselGeneral>
         </div>
       </div>
     </div>
@@ -73,9 +79,13 @@
 
 <script>
 import axios from "axios";
+import imageCarouselGeneral from "@/components/subview/labelpost/postImageCarouselContainer.vue";
 export default {
   name: "labelpost-component",
   props: ["param"],
+  components: {
+    imageCarouselGeneral,
+  },
   data() {
     return {
       posts: null,
@@ -113,6 +123,12 @@ export default {
   watch: {
     posts(newVal) {
       newVal.post_time = newVal.post_time.replace(".000000", "");
+    },
+    image(newVal) {
+      for (let i = 0; i < newVal.length; i++) {
+        newVal[i] = `${this.$BackendURL}postImage/${newVal[i]}`;
+      }
+      newVal = Object.values(newVal);
     },
   },
   methods: {
@@ -152,11 +168,11 @@ export default {
         });
     },
     getImage() {
-      const param = "?post_id=" + this.param.post_id;
+      const param = "/" + this.param.post_id;
       axios
-        .get(this.$BackendURL + "image" + param)
+        .get(this.$BackendURL + "getPostImage" + param)
         .then((res) => {
-          //   console.log(res.data);
+          // console.log(res.data);
           this.image = res.data.image;
         })
         .catch((err) => {
@@ -169,17 +185,17 @@ export default {
       this.label.labeller = this.getAccount.nickname;
       console.log(this.label);
       axios
-          .post(this.$BackendURL + "label/update", this.label)
-          .then((res) => {
-            console.log("Axios Submit success : ", res.data);
-            // update success, redirect to post table
-            this.$router.push('label')
-          })
-          .catch((err) => {
-            console.log("Axios Submit err : ", err.response.data);
-            // show error message from server
-            this.ErrorMSG = err.response.data.error;
-          });
+        .post(this.$BackendURL + "label/update", this.label)
+        .then((res) => {
+          console.log("Axios Submit success : ", res.data);
+          // update success, redirect to post table
+          this.$router.push("label");
+        })
+        .catch((err) => {
+          console.log("Axios Submit err : ", err.response.data);
+          // show error message from server
+          this.ErrorMSG = err.response.data.error;
+        });
     },
   },
 
@@ -190,7 +206,7 @@ export default {
   mounted() {
     this.getPostID();
     this.getLabel();
-    // this.getImage();
+    this.getImage();
   },
 };
 </script>
@@ -280,10 +296,8 @@ a {
 .image-post {
   text-align: center;
 }
-.image-post img {
-  width: 600px;
-  max-width: 100%;
-  object-fit: cover;
+.image-post .image-Carousel {
+  height: 700px;
 }
 /* End Content post */
 
@@ -372,4 +386,30 @@ a {
 /* End Custom checkbox */
 /* End checkbox */
 /* End Label */
+
+@media screen and (max-width: 1024px) {
+  .image-post .image-Carousel {
+    height: 600px;
+  }
+}
+@media screen and (max-width: 900px) {
+  .image-post .image-Carousel {
+    height: 500px;
+  }
+}
+@media screen and (max-width: 700px) {
+  .image-post .image-Carousel {
+    height: 500px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .image-post .image-Carousel {
+    height: 500px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .image-post .image-Carousel {
+    height: 400px;
+  }
+}
 </style>
