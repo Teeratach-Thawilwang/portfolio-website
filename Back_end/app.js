@@ -15,9 +15,9 @@ app.use(cors())
 app.use('/', router)
 
 // catch 404 and forward to error handler
-app.use((req, res, next) => {
-    next(createError(404));
-});
+// app.use((req, res, next) => {
+//     next(createError(404));
+// });
 
 // set port
 const listenPort = 35001
