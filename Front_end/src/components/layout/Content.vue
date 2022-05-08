@@ -87,6 +87,7 @@ export default {
   display: flex;
   justify-content: space-around;
   position: relative;
+  z-index: 100;
   /* border: 1px solid red; */
 }
 .sidebar {
