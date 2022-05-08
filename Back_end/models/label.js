@@ -10,7 +10,7 @@ const labelClient = mongoose.createConnection(dburl, {
 
 // design schema
 let labelSchema = mongoose.Schema({
-    post_id: Number,
+    post_id: String,
     labeller: String,
     status: String,
     Real: Boolean,
@@ -21,6 +21,7 @@ let labelSchema = mongoose.Schema({
     Polarizing: Boolean,
     Misreporting: Boolean,
     NoReference: Boolean,
+    SharePost: Boolean,
     Video: Boolean,
     Deleted: Boolean,
 }, { collection: 'label' })

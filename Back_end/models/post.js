@@ -11,7 +11,7 @@ const postClient = mongoose.createConnection(dburl, {
 // design schema
 let postSchema = mongoose.Schema({
     page_name: String,
-    post_id: Number,
+    post_id: String,
     post_text: String,
     like: Number,
     love: Number,
