@@ -8,7 +8,7 @@
       <div class="horizontal-scroll">
         <div class="table-nav">
           <div class="show-npage">
-            <span>Show page</span>
+            <span>Show</span>
             <select name="show-npage" id="npage" v-model="shownpage">
               <option value="50">50</option>
               <option value="100">100</option>
@@ -16,14 +16,24 @@
               <option value="1000">1000</option>
             </select>
           </div>
-          <div class="pagination">
-            <span @click="setnPage($event, -1)">&laquo;</span>
-            <input
-              type="number"
-              v-model="nPage"
-              @keydown.enter.exact="setnPage($event)"
-            />
-            <span @click="setnPage($event, +1)">&raquo;</span>
+          <div>
+            <div class="goPostId">
+              <span>ToPost</span>
+              <input
+                type="number"
+                v-model="postIndex"
+                @keydown.enter.exact="MoveToPostIndex()"
+              />
+            </div>
+            <div class="pagination">
+              <span @click="setnPage($event, -1)">&laquo;</span>
+              <input
+                type="number"
+                v-model="nPage"
+                @keydown.enter.exact="setnPage($event)"
+              />
+              <span @click="setnPage($event, +1)">&raquo;</span>
+            </div>
           </div>
         </div>
         <table class="label-table">
@@ -34,14 +44,22 @@
             <th>Labeller</th>
             <th>Status</th>
           </tr>
-          <tr v-for="(post, index) in posts" :key="index">
+          <tr
+            v-for="(post, index) in posts"
+            :key="index"
+            :id="`postIndex${(nPage - 1) * shownpage + index + 1}`"
+            tabindex="0"
+          >
             <td>{{ (nPage - 1) * shownpage + index + 1 }}</td>
             <td>{{ post.page_name }}</td>
             <td>{{ post.post_time }}</td>
             <td>{{ post.labeller }}</td>
             <td>
               <p class="fs-small">{{ post.status }}</p>
-              <a class="btn-label" :href="`/labelpost?post_id=${post.post_id}`"
+              <a
+                class="btn-label"
+                @click.prevent="setPageIndex(post.post_id)"
+                href="#"
                 >Label</a
               >
             </td>
@@ -59,6 +77,7 @@ export default {
   data() {
     return {
       shownpage: 50,
+      postIndex: 1,
       nPage: 1,
       posts: null,
     };
@@ -71,7 +90,13 @@ export default {
       return this.$store.getters.getThemeColorInvert;
     },
     getShownpage() {
-      return this.shownpage;
+      return this.$store.getters.getShownpage;
+    },
+    getLabelnPage() {
+      return this.$store.getters.getLabelnPage;
+    },
+    getLabelPageIndex() {
+      return this.$store.getters.getLabelPageIndex;
     },
   },
   watch: {
@@ -83,13 +108,22 @@ export default {
         element.post_time = element.post_time.split(" ")[0];
       });
     },
+    shownpage(newVal) {
+      this.postIndex = newVal * (this.nPage - 1) + 1;
+      this.getPosts(this.nPage, newVal);
+    },
     nPage(val) {
       if (val <= 0) {
         this.nPage = 1;
       }
+      this.postIndex = this.shownpage * (this.nPage - 1) + 1;
     },
   },
   methods: {
+    setSidebarTopic() {
+      let topic = [{ key: "Post List", value: "hand-peace" }];
+      this.$store.dispatch("setTopicAction", topic);
+    },
     setnPage(event, val = 0) {
       // add, minus with arrow pagination
       if ((val != 0 && this.nPage > 1) || val == +1) {
@@ -99,9 +133,16 @@ export default {
       if (Number.isInteger(this.nPage)) {
         // if true, show data array on page number.
         this.getPosts(this.nPage, this.shownpage);
-        console.log("nPage is numebr");
       }
       event.target.blur();
+    },
+    setPageIndex(post_id) {
+      const url = "/labelpost?post_id=" + post_id;
+      console.log(this.shownpage, this.nPage, this.postIndex, url);
+      this.$store.dispatch("setShownpageAction", this.shownpage);
+      this.$store.dispatch("setLabelnPageAction", this.nPage);
+      this.$store.dispatch("setLabelPageIndexAction", this.postIndex);
+      this.$router.push(url);
     },
     getPosts(nPage = 1, row = 50) {
       const param = "?nPage=" + nPage + "&row=" + row;
@@ -117,19 +158,19 @@ export default {
           this.ErrorMSG = err.response.data.error;
         });
     },
-    setSidebarTopic() {
-      let topic = [
-        { key: "Post List", value: "hand-peace" },
-      ];
-      this.$store.dispatch("setTopicAction", topic);
+    MoveToPostIndex() {
+      document.getElementById("postIndex" + this.postIndex).focus();
     },
   },
   mounted() {
     this.getPosts();
+    this.shownpage = this.getShownpage;
+    this.postIndex = this.getLabelPageIndex;
+    this.nPage = this.getLabelnPage;
   },
-  created(){
+  created() {
     this.setSidebarTopic();
-  }
+  },
 };
 </script>
 
@@ -137,14 +178,17 @@ export default {
 @import "@/assets/css/font.css";
 @import "@/assets/css/layout.css";
 @import "@/assets/css/box.css";
+
 hr {
   border: 1px solid v-bind(themeColorNormal);
   background-color: v-bind(themeColorNormal);
 }
+
 a {
   text-decoration: underline;
   color: v-bind(themeColorNormal);
 }
+
 .view-label-container {
   display: block;
   width: 100%;
@@ -162,6 +206,7 @@ a {
   @extend .fs-big;
   @extend .fw-bolder;
 }
+
 .text-normal {
   @extend .fs-normal;
   @extend .text-left;
@@ -169,6 +214,7 @@ a {
   padding: 1rem 0 0 0;
   // border: 1px solid red;
 }
+
 .content-container {
   @extend .content-container;
   margin-top: 3rem;
@@ -188,11 +234,20 @@ a {
   margin: 1rem 0 0.5rem 0;
 }
 
-.show-npage span {
+.table-nav div {
+  display: flex;
+}
+.goPostId {
+  margin-right: 1rem;
+}
+
+.show-npage span,
+.goPostId span {
   @extend .fs-normal;
   margin-right: 5px;
   // border: 1px solid #fff;
 }
+
 .show-npage select {
   @extend .fs-normal;
   text-align: center;
@@ -212,12 +267,16 @@ a {
   align-items: center;
   // border: 1px solid #fff;
 }
+
+.goPostId span:hover,
 .pagination span:hover {
   border-radius: 3px;
   background-color: v-bind(themeColorNormal);
   color: v-bind(themeColorInvert);
   cursor: pointer;
 }
+
+.goPostId input,
 .pagination input {
   @extend .fs-normal;
   width: 3rem;
@@ -226,6 +285,9 @@ a {
   // border-radius: 3px;
   text-align: center;
 }
+
+.goPostId input::-webkit-outer-spin-button,
+.goPostId input::-webkit-inner-spin-button,
 .pagination input::-webkit-outer-spin-button,
 .pagination input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -242,20 +304,24 @@ a {
     border: 1px solid #000;
     background-color: #fff;
     color: #000;
+
     td {
       height: auto;
       padding: 10px 10px;
       border: 1px solid #000;
     }
   }
+
   tr:hover {
     background-color: rgb(230, 230, 230);
   }
+
   tr:first-child {
     @extend .fs-small;
     border: 1px solid rgb(175, 176, 177);
     background-color: rgb(55, 60, 65);
     color: rgb(205, 205, 205);
+
     th {
       padding: 10px 0;
       border: 1px solid rgb(175, 176, 177);
@@ -266,6 +332,7 @@ a {
   td:nth-child(1) {
     width: 5%;
   }
+
   th:nth-child(2),
   td:nth-child(2) {
     width: 45%;
@@ -274,17 +341,21 @@ a {
     word-wrap: break-word;
     max-width: 1px;
   }
+
   td:nth-child(2) {
     text-align: left;
   }
+
   th:nth-child(3),
   td:nth-child(3) {
     width: 25%;
   }
+
   th:nth-child(4),
   td:nth-child(4) {
     width: 15%;
   }
+
   th:nth-child(5),
   td:nth-child(5) {
     width: 10%;
@@ -301,6 +372,7 @@ a {
   color: #fff;
   text-decoration: none;
 }
+
 .btn-label:hover {
   background-color: rgb(28, 145, 28);
 }
