@@ -60,9 +60,6 @@ export default {
       this.direction = "right";
     },
   },
-  mounted() {
-    console.log("compute ", this.Images);
-  },
 };
 </script>
 
