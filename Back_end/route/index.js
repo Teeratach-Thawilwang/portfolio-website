@@ -7,6 +7,7 @@ const path = require('path');
 var accountCL = require('../models/account');
 var postCL = require('../models/post');
 var labelCL = require('../models/label');
+var labelDesCL = require('../models/labelDes');
 
 // import bcrypr
 const bcrypt = require("bcrypt");
@@ -31,7 +32,7 @@ const getpost = async (posts, labels) => {
     const data = [];
     for (let i = 0; i < posts.length; i++) {
         for (let j = 0; j < labels.length; j++) {
-            if (posts[i].post_id == labels[j].post_id) {
+            if (posts[i].post_id === labels[j].post_id) {
                 const temp = {
                     post_id: posts[i].post_id,
                     page_name: posts[i].page_name,
@@ -141,21 +142,27 @@ router.get('/getPosts', async (req, res) => {
 
 router.get('/posts', async (req, res) => {
     const body = req.query
-    const posts = await postCL.findOne({ post_id: body.post_id })
+    const posts = await postCL.findOne({ post_id: body.post_id.toString() })
     res.status(200).json({ posts: posts })
 })
 
 router.get('/label', async (req, res) => {
     const body = req.query
-    const labels = await labelCL.findOne({ post_id: body.post_id })
+    const labels = await labelCL.findOne({ post_id: body.post_id.toString() })
     res.status(200).json({ labels: labels })
+})
+
+router.get('/labelDes', async (req, res) => {
+    const labelDes = await labelDesCL.find({})
+    res.status(200).json({ labelDes: labelDes[0] })
 })
 
 router.post('/label/update', async (req, res) => {
     const body = req.body
     body.status = 'done'
+    body.post_id = body.post_id.toString()
     delete body._id
-    const labels = await labelCL.findOneAndUpdate({ post_id: body.post_id }, body, { new: 1 });
+    const labels = await labelCL.findOneAndUpdate({ post_id: body.post_id.toString() }, body, { new: 1 });
     const labelsObj = labels.toObject()
     delete labelsObj._id
     if (JSON.stringify(labelsObj) === JSON.stringify(body)) {
@@ -195,7 +202,7 @@ router.get('/getPostImage/:post_id', async (req, res) => {
 router.get('/postImage/:filename', async (req, res) => {
     const body = req.params
     const filePath = `../../data/image/` + body.filename
-    res.status(404).sendFile(path.resolve(filePath), (err) => {
+    res.status(200).sendFile(path.resolve(filePath), (err) => {
         if (err) {
             res.status(401).json({ error: "No such file or directory" })
         }
