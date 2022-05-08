@@ -22,6 +22,9 @@ export default new Vuex.Store({
             chatBtnBGHover: "#0D890D",
         },
         topics: [],
+        Shownpage: 50,
+        LabelnPage: 1,
+        LabelPageIndex: 1,
     },
     mutations: {
         changeTheme(state, value) {
@@ -61,8 +64,17 @@ export default new Vuex.Store({
             state.Account.nickname = val.username;
             state.Account.email = val.email;
         },
-        setTopic(state, val){
+        setTopic(state, val) {
             state.topics = val
+        },
+        setShownpage(state, val) {
+            state.Shownpage = val
+        },
+        setLabelnPage(state, val) {
+            state.LabelnPage = val
+        },
+        setLabelPageIndex(state, val) {
+            state.LabelPageIndex = val
         }
     },
     actions: {
@@ -75,8 +87,17 @@ export default new Vuex.Store({
         setAccountAction(context, val) {
             context.commit('setAccount', val)
         },
-        setTopicAction(context, val){
+        setTopicAction(context, val) {
             context.commit('setTopic', val)
+        },
+        setShownpageAction(context, val) {
+            context.commit('setShownpage', val)
+        },
+        setLabelnPageAction(context, val) {
+            context.commit('setLabelnPage', val)
+        },
+        setLabelPageIndexAction(context, val) {
+            context.commit('setLabelPageIndex', val)
         }
     },
     getters: {
@@ -107,6 +128,15 @@ export default new Vuex.Store({
                     email: "",
                 }
             }
+        },
+        getShownpage(state) {
+            return state.Shownpage;
+        },
+        getLabelnPage(state) {
+            return state.LabelnPage;
+        },
+        getLabelPageIndex(state) {
+            return state.LabelPageIndex;
         },
     },
     modules: {}
