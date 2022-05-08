@@ -10,6 +10,7 @@ const accountClient = mongoose.createConnection(dburl, {
 
 // design schema
 let chatSchema = mongoose.Schema({
+    token: String,
     username: String,
     email: String,
     password: String,
