@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     checkCookiesLogin() {
-      // check login cookies {email : -, hashEmail : -}
+      // check login cookies {email : -, token : -}
       let session = this.cookies.get("session");
       if (session) {
         axios
@@ -72,6 +72,7 @@ export default {
     this.$store.dispatch("changeThemeAction", color);
   },
   created() {
+    console.log('created')
     this.checkCookiesLogin();
   },
 };

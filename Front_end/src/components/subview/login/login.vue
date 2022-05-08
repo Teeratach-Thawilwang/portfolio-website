@@ -205,7 +205,7 @@ export default {
             if (this.inputForm.remember) {
               let loginCookies = {
                 email: res.data.account.email,
-                hashEmail: res.data.account.hashEmail,
+                token: res.data.account.token,
               };
               this.cookies.set("session", loginCookies);
             }
@@ -242,7 +242,7 @@ export default {
             if (this.inputForm.remember) {
               let loginCookies = {
                 email: accData.email,
-                hashEmail: res.data.hashEmail,
+                token: res.data.token,
               };
               this.cookies.set("session", loginCookies);
             }
