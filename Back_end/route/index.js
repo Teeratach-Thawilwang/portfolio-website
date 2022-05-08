@@ -11,21 +11,21 @@ var labelDesCL = require('../models/labelDes');
 
 // import bcrypr
 const bcrypt = require("bcrypt");
+
+// import jwt
+const JWT = require("jsonwebtoken")
+
 // const { route } = require('express/lib/application');
 
 /******************* Useful function *******************/
 // These function might be move to helpers folder
-const createCookiesLogin = async (email) => {
-    // set salt = 5
-    const salt = await bcrypt.genSalt(5);
-    // encrypt email
-    const hashEmail = await bcrypt.hash(email, salt);
-    return hashEmail
-}
-
-const checkCookiesLogin = async (email, hashEmail) => {
-    const validCookiesLogin = await bcrypt.compare(email, hashEmail)
-    return validCookiesLogin
+const createToken = async (email, expiretime = '2h') => {
+    return JWT.sign(
+        { user_id: email },
+        process.env.TOKEN_KEY,
+        {
+            expiresIn: expiretime
+        })
 }
 
 const getpost = async (posts, labels) => {
@@ -60,8 +60,7 @@ router.post('/login', async (req, res) => {
         const validPassword = await bcrypt.compare(body.password, user.password)
         if (validPassword) {
             // validatation true = password is correct.
-            let HashEmail = await createCookiesLogin(user.email)
-            let accData = { username: user.username, email: user.email, hashEmail: HashEmail }
+            let accData = { username: user.username, email: user.email, token: user.token }
             let msg = { message: 'valid password', account: accData }
             res.status(200).json(msg)
         } else {
@@ -85,8 +84,9 @@ router.post('/signin', async (req, res) => {
         const salt = await bcrypt.genSalt(7);
         // encrypt password
         user.password = await bcrypt.hash(user.password, salt);
-        // hash email
-        let HashEmail = await createCookiesLogin(user.email)
+        // create jwt token by using email
+        let token = await createToken(user.email)
+        user.token = token
         // insert account to db.
         console.log('insert ', user)
         accountCL.saveAccount(user, (err) => {
@@ -94,20 +94,19 @@ router.post('/signin', async (req, res) => {
                 console.log('Error in /signin : ', err)
                 res.status(500).json({ error: 'Cannot create account.' })
             } else {
-                res.status(200).json({ message: 'Create account successfully.', hashEmail: HashEmail })
+                res.status(200).json({ message: 'Create account successfully.', token: token })
             }
         })
     } else {
-        res.status(401).json({ error: 'This email is already used.' })
+        res.status(409).json({ error: 'This email is already used.' })
     }
 })
 
 router.post('/checkLogin', async (req, res) => {
     const body = req.body
-    let valid = await checkCookiesLogin(body.email, body.hashEmail)
-    if (valid) {
-        // correct email and hashEmail
-        const user = await accountCL.findOne({ email: body.email });
+    const user = await accountCL.findOne({ email: body.email });
+    if (user.token === body.token) {
+        // correct email and token
         let accData = { username: user.username, email: body.email }
         res.status(200).json({ message: 'Valid cookies', account: accData })
     } else {
