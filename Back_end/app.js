@@ -3,6 +3,7 @@ const cors = require('cors')
 const router = require('./route/index')
 const socket = require('./socket/socket')
 var createError = require('http-errors');
+const dotenv = require('dotenv').config()
 
 const app = express()
 
