@@ -31,7 +31,7 @@
       </div>
     </div>
     <div id="topic-2" class="content-container">
-      <div v-if="label != null">
+      <div v-if="label != null && category != null">
         <div class="header-Label">
           <p class="fw-bolder text-center p-1-1">Label</p>
           <p class="fs-small" @click="hideDetail = !hideDetail">
@@ -89,23 +89,9 @@ export default {
   data() {
     return {
       posts: null,
-      label: null,
       image: null,
-      category: {
-        Real: "ข่าวจริง ข้อมูลถูกต้อง หรือเเสดงความเห็นแบบเป็นกลาง เชิงพูดคุย มุกขำขันที่เป็นความจริง ไม่มีการชักจูง ไม่มีอารมณ์ในข้อความ",
-        Satire: "มีข้อความเสียดสี ล้อเลียน โดยไม่มีเค้าโครงความจริง",
-        FalseNews:
-          "ให้ข้อมูลผิด ไม่มีอ้างอิงหรืออ้างอิงผิด ใช้รูปภาพไม่ถูกต้อง",
-        Commentary: "เขียนเชิงวิจารณ์ มีอารมณ์เเละความคิดเห็นในข้อความ",
-        Persuasive: "ข่าวที่มีการโน้มน้าว ชักชวน โฆษณาเกินจริง",
-        Polarizing:
-          "ข่าวที่เเสดงความเห็นไปด้านใดด้านนึงโดยไม่มีหลักฐาน มีทัศนคติ อารมณ์หรือคำหยาบในข้อความ",
-        Misreporting:
-          "ให้ข้อมูลผิดโดยไม่ตั้งใจโดยเเหล่งข่าวมีชื่อเสียง ไม่มีเจตนาหลอกหลวง ",
-        NoReference: "ไม่มีเเหล่งอ้างอิง มาสนับสนุนข้อมูลที่กล่าว",
-        Video: "โพสวิดีโอ",
-        Deleted: "โพสถูกลบเเล้ว",
-      },
+      label: null,
+      category: null,
       hideDetail: true,
     };
   },
@@ -139,12 +125,12 @@ export default {
       ];
       this.$store.dispatch("setTopicAction", topic);
     },
-    getPostID() {
-      const param = "?post_id=" + this.param.post_id;
+    getPostID(post_id) {
+      const param = "?post_id=" + post_id;
       axios
         .get(this.$BackendURL + "posts" + param)
         .then((res) => {
-          //   console.log(res.data);
+          // console.log("getPostID", res.data);
           this.posts = res.data.posts;
         })
         .catch((err) => {
@@ -153,12 +139,12 @@ export default {
           this.ErrorMSG = err.response.data.error;
         });
     },
-    getLabel() {
-      const param = "?post_id=" + this.param.post_id;
+    getLabel(post_id) {
+      const param = "?post_id=" + post_id;
       axios
         .get(this.$BackendURL + "label" + param)
         .then((res) => {
-          //   console.log(res.data);
+          // console.log("getLabel", res.data);
           this.label = res.data.labels;
         })
         .catch((err) => {
@@ -167,12 +153,26 @@ export default {
           this.ErrorMSG = err.response.data.error;
         });
     },
-    getImage() {
-      const param = "/" + this.param.post_id;
+    getLabelDes(post_id) {
+      const param = "?post_id=" + post_id;
+      axios
+        .get(this.$BackendURL + "labelDes" + param)
+        .then((res) => {
+          // console.log("getLabelDes", res.data);
+          this.category = res.data.labelDes;
+        })
+        .catch((err) => {
+          console.log("Axios getLabelDes err : ", err.response.data);
+          // show error message from server
+          this.ErrorMSG = err.response.data.error;
+        });
+    },
+    getImage(post_id) {
+      const param = "/" + post_id;
       axios
         .get(this.$BackendURL + "getPostImage" + param)
         .then((res) => {
-          // console.log(res.data);
+          // console.log("getImage", res.data);
           this.image = res.data.image;
         })
         .catch((err) => {
@@ -183,11 +183,10 @@ export default {
     },
     submit() {
       this.label.labeller = this.getAccount.nickname;
-      console.log(this.label);
       axios
         .post(this.$BackendURL + "label/update", this.label)
         .then((res) => {
-          console.log("Axios Submit success : ", res.data);
+          // console.log("Axios Submit success : ", res.data);
           // update success, redirect to post table
           this.$router.push("label");
         })
@@ -204,9 +203,10 @@ export default {
     this.setSidebarTopic();
   },
   mounted() {
-    this.getPostID();
-    this.getLabel();
-    this.getImage();
+    this.getPostID(this.param.post_id);
+    this.getImage(this.param.post_id);
+    this.getLabel(this.param.post_id);
+    this.getLabelDes(this.param.post_id);
   },
 };
 </script>
