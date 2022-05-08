@@ -58,8 +58,7 @@
               <p class="fs-small">{{ post.status }}</p>
               <a
                 class="btn-label"
-                @click.prevent="setPageIndex(post.post_id)"
-                href="#"
+                :href="`/labelpost?post_id=${post.post_id}`"
                 >Label</a
               >
             </td>
@@ -76,9 +75,9 @@ export default {
   name: "Label-component",
   data() {
     return {
-      shownpage: 50,
-      postIndex: 1,
-      nPage: 1,
+      shownpage: null,
+      postIndex: null,
+      nPage: null,
       posts: null,
     };
   },
@@ -95,8 +94,8 @@ export default {
     getLabelnPage() {
       return this.$store.getters.getLabelnPage;
     },
-    getLabelPageIndex() {
-      return this.$store.getters.getLabelPageIndex;
+    getLabelPostIndex() {
+      return this.$store.getters.getLabelPostIndex;
     },
   },
   watch: {
@@ -109,14 +108,25 @@ export default {
       });
     },
     shownpage(newVal) {
+      newVal = parseInt(newVal);
       this.postIndex = newVal * (this.nPage - 1) + 1;
       this.getPosts(this.nPage, newVal);
+
+      // set data to vuex
+      this.$store.dispatch("setShownpageAction", newVal);
     },
-    nPage(val) {
-      if (val <= 0) {
+    nPage(newVal) {
+      if (newVal <= 0) {
         this.nPage = 1;
       }
       this.postIndex = this.shownpage * (this.nPage - 1) + 1;
+
+      // set data to vuex
+      this.$store.dispatch("setLabelnPageAction", newVal);
+    },
+    postIndex(newVal) {
+      // set data to vuex
+      this.$store.dispatch("setLabelPageIndexAction", newVal);
     },
   },
   methods: {
@@ -135,14 +145,6 @@ export default {
         this.getPosts(this.nPage, this.shownpage);
       }
       event.target.blur();
-    },
-    setPageIndex(post_id) {
-      const url = "/labelpost?post_id=" + post_id;
-      console.log(this.shownpage, this.nPage, this.postIndex, url);
-      this.$store.dispatch("setShownpageAction", this.shownpage);
-      this.$store.dispatch("setLabelnPageAction", this.nPage);
-      this.$store.dispatch("setLabelPageIndexAction", this.postIndex);
-      this.$router.push(url);
     },
     getPosts(nPage = 1, row = 50) {
       const param = "?nPage=" + nPage + "&row=" + row;
@@ -163,10 +165,10 @@ export default {
     },
   },
   mounted() {
-    this.getPosts();
     this.shownpage = this.getShownpage;
-    this.postIndex = this.getLabelPageIndex;
+    this.postIndex = this.getLabelPostIndex;
     this.nPage = this.getLabelnPage;
+    this.getPosts(this.nPage, this.shownpage);
   },
   created() {
     this.setSidebarTopic();
@@ -279,6 +281,7 @@ a {
 .goPostId input,
 .pagination input {
   @extend .fs-normal;
+  display: inline-block;
   width: 3rem;
   height: 1.5rem;
   outline-width: 0px;
