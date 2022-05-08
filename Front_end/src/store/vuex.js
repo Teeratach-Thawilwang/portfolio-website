@@ -1,4 +1,5 @@
 import Vuex from "vuex"
+import createPersistedState from "vuex-persistedstate";
 
 export default new Vuex.Store({
     state: {
@@ -24,7 +25,7 @@ export default new Vuex.Store({
         topics: [],
         Shownpage: 50,
         LabelnPage: 1,
-        LabelPageIndex: 1,
+        LabelPostIndex: 1,
     },
     mutations: {
         changeTheme(state, value) {
@@ -73,8 +74,8 @@ export default new Vuex.Store({
         setLabelnPage(state, val) {
             state.LabelnPage = val
         },
-        setLabelPageIndex(state, val) {
-            state.LabelPageIndex = val
+        setLabelPostIndex(state, val) {
+            state.LabelPostIndex = val
         }
     },
     actions: {
@@ -96,8 +97,8 @@ export default new Vuex.Store({
         setLabelnPageAction(context, val) {
             context.commit('setLabelnPage', val)
         },
-        setLabelPageIndexAction(context, val) {
-            context.commit('setLabelPageIndex', val)
+        setLabelPostIndexAction(context, val) {
+            context.commit('setLabelPostIndex', val)
         }
     },
     getters: {
@@ -135,9 +136,10 @@ export default new Vuex.Store({
         getLabelnPage(state) {
             return state.LabelnPage;
         },
-        getLabelPageIndex(state) {
-            return state.LabelPageIndex;
+        getLabelPostIndex(state) {
+            return state.LabelPostIndex;
         },
     },
-    modules: {}
+    modules: {},
+    plugins: [createPersistedState()]
 })
