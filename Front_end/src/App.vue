@@ -47,6 +47,7 @@ export default {
             console.log("check cookies error ", err.response.data);
             this.cookies.remove("session");
             this.setLogin(false);
+            this.$router.push('/')
           });
       }
     },
