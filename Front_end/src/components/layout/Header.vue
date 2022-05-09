@@ -8,7 +8,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/research">Research</a></li>
         <li v-if="getLoginStatus"><a href="/label">Label</a></li>
-        <li v-if="getLoginStatus" @click="setLoginStatus(false)">
+        <li v-if="getLoginStatus" @click="setLogoutStatus()">
           <a href="#">Logout</a>
         </li>
         <li v-else><a href="#" @click="clickLoginPopUp = true">Login</a></li>
@@ -65,9 +65,11 @@ export default {
     clickLoginPopUpMT(value) {
       this.clickLoginPopUp = value;
     },
-    setLoginStatus(val) {
-      this.$store.dispatch("setLoginAction", val);
+    setLogoutStatus() {
+      this.$store.dispatch("setLoginAction", false);
+      this.$store.dispatch("setTokenAction", null);
       this.cookies.remove("session");
+      this.$router.push('/')
     },
   },
   mounted() {
