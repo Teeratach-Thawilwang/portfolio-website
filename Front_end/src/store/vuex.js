@@ -3,6 +3,7 @@ import createPersistedState from "vuex-persistedstate";
 
 export default new Vuex.Store({
     state: {
+        token: null,
         loginStatus: false,
         Account: {
             nickname: "",
@@ -28,6 +29,9 @@ export default new Vuex.Store({
         LabelPostIndex: 1,
     },
     mutations: {
+        setToken(state, val) {
+            state.token = val
+        },
         changeTheme(state, value) {
             if (value === "white") {
                 state.themeColor = "white";
@@ -79,6 +83,9 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        setTokenAction(context, val) {
+            context.commit('setToken', val)
+        },
         changeThemeAction(context, themeColor) {
             context.commit('changeTheme', themeColor);
         },
@@ -102,6 +109,9 @@ export default new Vuex.Store({
         }
     },
     getters: {
+        getToken(state) {
+            return state.token;
+        },
         getThemeColor(state) {
             return state.themeColor;
         },
