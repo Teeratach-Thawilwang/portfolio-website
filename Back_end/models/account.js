@@ -10,10 +10,11 @@ const accountClient = mongoose.createConnection(dburl, {
 
 // design schema
 let chatSchema = mongoose.Schema({
-    token: String,
     username: String,
     email: String,
     password: String,
+    user_id: String,
+    token: String,
     isAdmin: { type: Boolean, default: false },
 }, { timestamps: {} })
 
