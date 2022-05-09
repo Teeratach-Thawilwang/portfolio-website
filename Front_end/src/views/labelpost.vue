@@ -93,9 +93,13 @@ export default {
       label: null,
       category: null,
       hideDetail: true,
+      headerData: null,
     };
   },
   computed: {
+    getToken() {
+      return this.$store.getters.getToken;
+    },
     themeColorNormal() {
       return this.$store.getters.getThemeColorNormal;
     },
@@ -128,7 +132,7 @@ export default {
     getPostID(post_id) {
       const param = "?post_id=" + post_id;
       axios
-        .get(this.$BackendURL + "posts" + param)
+        .get(this.$BackendURL + "posts" + param, this.headerData)
         .then((res) => {
           // console.log("getPostID", res.data);
           this.posts = res.data.posts;
@@ -142,7 +146,7 @@ export default {
     getLabel(post_id) {
       const param = "?post_id=" + post_id;
       axios
-        .get(this.$BackendURL + "label" + param)
+        .get(this.$BackendURL + "label" + param, this.headerData)
         .then((res) => {
           // console.log("getLabel", res.data);
           this.label = res.data.labels;
@@ -156,7 +160,7 @@ export default {
     getLabelDes(post_id) {
       const param = "?post_id=" + post_id;
       axios
-        .get(this.$BackendURL + "labelDes" + param)
+        .get(this.$BackendURL + "labelDes" + param, this.headerData)
         .then((res) => {
           // console.log("getLabelDes", res.data);
           this.category = res.data.labelDes;
@@ -170,7 +174,7 @@ export default {
     getImage(post_id) {
       const param = "/" + post_id;
       axios
-        .get(this.$BackendURL + "getPostImage" + param)
+        .get(this.$BackendURL + "getPostImage" + param, this.headerData)
         .then((res) => {
           // console.log("getImage", res.data);
           this.image = res.data.image;
@@ -184,7 +188,7 @@ export default {
     submit() {
       this.label.labeller = this.getAccount.nickname;
       axios
-        .post(this.$BackendURL + "label/update", this.label)
+        .post(this.$BackendURL + "label/update", this.label, this.headerData)
         .then((res) => {
           // console.log("Axios Submit success : ", res.data);
           // update success, redirect to post table
@@ -196,6 +200,14 @@ export default {
           this.ErrorMSG = err.response.data.error;
         });
     },
+    setHeader(val) {
+      this.headerData = {
+        headers: {
+          "x-access-token": val,
+          "content-type": "application/json",
+        },
+      };
+    },
   },
 
   created() {
@@ -203,6 +215,7 @@ export default {
     this.setSidebarTopic();
   },
   mounted() {
+    this.setHeader(this.getToken);
     this.getPostID(this.param.post_id);
     this.getImage(this.param.post_id);
     this.getLabel(this.param.post_id);

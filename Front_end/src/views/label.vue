@@ -82,6 +82,9 @@ export default {
     };
   },
   computed: {
+    getToken() {
+      return this.$store.getters.getToken;
+    },
     themeColorNormal() {
       return this.$store.getters.getThemeColorNormal;
     },
@@ -148,8 +151,14 @@ export default {
     },
     getPosts(nPage = 1, row = 50) {
       const param = "?nPage=" + nPage + "&row=" + row;
+      const data = {
+        headers: {
+          "x-access-token": this.getToken,
+          "content-type": "application/json",
+        },
+      };
       axios
-        .get(this.$BackendURL + "getPosts" + param)
+        .get(this.$BackendURL + "getPosts" + param, data)
         .then((res) => {
           // console.log(res.data);
           this.posts = res.data.posts;
