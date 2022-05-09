@@ -72,7 +72,6 @@ export default {
     this.$store.dispatch("changeThemeAction", color);
   },
   created() {
-    console.log('created')
     this.checkCookiesLogin();
   },
 };
