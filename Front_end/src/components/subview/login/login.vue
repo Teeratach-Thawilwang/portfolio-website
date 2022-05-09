@@ -7,15 +7,15 @@
     <div class="close-btn" @click="closeLoginForm()">&times;</div>
     <div class="form-header">
       <span
-        @click="ChooseLonginSignin('login')"
+        @click="ChooseLonginsignup('login')"
         :class="formChoiceActive == 'login' ? 'active' : ''"
         >Login</span
       >
       <span> | </span>
       <span
-        @click="ChooseLonginSignin('signin')"
-        :class="formChoiceActive == 'signin' ? 'active' : ''"
-        >Sign in</span
+        @click="ChooseLonginsignup('signup')"
+        :class="formChoiceActive == 'signup' ? 'active' : ''"
+        >Sign Up</span
       >
     </div>
     <form
@@ -24,7 +24,7 @@
       v-on:keydown.enter.prevent
       v-on:submit.prevent
     >
-      <div class="form-element" v-show="formChoiceActive == 'signin'">
+      <div class="form-element" v-show="formChoiceActive == 'signup'">
         <label>Nickname</label>
         <input
           type="text"
@@ -58,7 +58,7 @@
           placeholder="Enter password"
           v-model="inputForm.password"
           @keyup.enter="
-            formChoiceActive == 'signin'
+            formChoiceActive == 'signup'
               ? focusNextInputForm($event, 'confirmPassword')
               : focusNextInputForm($event, 'remember_me')
           "
@@ -67,7 +67,7 @@
           {{ v$.inputForm.password.$errors[0].$message }}
         </p>
       </div>
-      <div class="form-element" v-show="formChoiceActive == 'signin'">
+      <div class="form-element" v-show="formChoiceActive == 'signup'">
         <label>Confirm Password</label>
         <input
           type="password"
@@ -194,7 +194,7 @@ export default {
         axios
           .post(this.$BackendURL + "login", accData)
           .then((res) => {
-            console.log("Axios login success : ", res.data);
+            // console.log("Axios login success : ", res.data);
             // login success, set login status to vuex
             this.setLoginStatus(true);
             this.setAccount({
@@ -219,31 +219,34 @@ export default {
             this.loginResponse = err.response.data.error;
           });
       } else if (
-        this.formChoiceActive === "signin" &&
+        this.formChoiceActive === "signup" &&
         !this.v$.inputForm.username.$error &&
         !this.v$.inputForm.email.$error &&
         !this.v$.inputForm.password.$error &&
         !this.v$.inputForm.passwordConfirm.$error
       ) {
-        // if no error validation, send signin form
+        // if no error validation, send signup form
         let accData = {
           username: this.inputForm.username,
           email: this.inputForm.email,
           password: this.inputForm.password,
         };
         axios
-          .post(this.$BackendURL + "signin", accData)
+          .post(this.$BackendURL + "signup", accData)
           .then((res) => {
-            console.log("Axios signin success : ", res.data);
-            // signin success, set login status to vuex
+            // signup success, set login status to vuex
+            // console.log("Axios signup success : ", res.data);
             this.setLoginStatus(true);
-            console.log("in signin success ", accData);
-            this.setAccount(accData);
+            this.setAccount({
+              username: res.data.account.username,
+              email: res.data.account.email,
+              token: res.data.account.token,
+            });
             // set cookies login
             if (this.inputForm.remember) {
               let loginCookies = {
-                email: accData.email,
-                token: res.data.token,
+                email: res.data.account.email,
+                token: res.data.account.token,
               };
               this.cookies.set("session", loginCookies);
             }
@@ -251,7 +254,7 @@ export default {
             this.closeLoginForm();
           })
           .catch((err) => {
-            console.log("Axios signin err : ", err.response.data);
+            console.log("Axios signup err : ", err.response.data);
             // show error message from server
             this.loginResponse = err.response.data.error;
           });
@@ -268,7 +271,7 @@ export default {
     setAccount(val) {
       this.$store.dispatch("setAccountAction", val);
     },
-    ChooseLonginSignin(val) {
+    ChooseLonginsignup(val) {
       this.formChoiceActive = val;
       this.loginResponse = "";
     },
@@ -310,7 +313,7 @@ export default {
     transform: translateX(0%);
   }
 }
-@keyframes signinForm {
+@keyframes signupForm {
   0% {
     transform: translateX(50%);
   }
@@ -326,8 +329,8 @@ export default {
   animation: loginForm 0.3s ease-in-out;
   /* border: 1px solid red; */
 }
-.login-form.signin {
-  animation: signinForm 0.3s ease-in-out;
+.login-form.signup {
+  animation: signupForm 0.3s ease-in-out;
   /* border: 1px solid orange; */
 }
 
