@@ -45,6 +45,7 @@ export default {
           })
           .catch((err) => {
             console.log("check cookies error ", err.response.data);
+            this.cookies.remove("session");
             this.setLogin(false);
           });
       }
