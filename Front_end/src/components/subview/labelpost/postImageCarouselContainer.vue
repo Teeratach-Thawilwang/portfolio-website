@@ -102,7 +102,7 @@ button {
   padding: 0 1rem;
   font-size: calc(2vw + 2vh - 0.5vmax);
   background-color: #000;
-  opacity: 0.2;
+  opacity: 0.1;
   border: none;
 
   top: 50%;
