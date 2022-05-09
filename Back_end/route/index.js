@@ -22,15 +22,6 @@ const JWT = require("jsonwebtoken")
 
 /******************* Useful function *******************/
 // These function might be move to helpers folder
-const createToken = async (username, email, expiretime = '30d') => {
-    return JWT.sign(
-        { user_id: username+email },
-        process.env.TOKEN_KEY,
-        {
-            expiresIn: expiretime
-        })
-}
-
 const getpost = async (posts, labels) => {
     const data = [];
     for (let i = 0; i < posts.length; i++) {
@@ -57,12 +48,18 @@ router.get('/', (req, res) => {
 
 router.post('/login', async (req, res) => {
     const body = req.body;
-    const user = await accountCL.findOne({ email: body.email });
+    let user = await accountCL.findOne({ email: body.email });
     if (user) {
         // if email is exist, check password with hash password
         const validPassword = await bcrypt.compare(body.password, user.password)
         if (validPassword) {
             // validatation true = password is correct.
+            // check expire token
+            if (auth.checkTokenExpire(user.token)) {
+                // token was expired.
+                const newToken = await auth.createToken(user.user_id)
+                user = await accountCL.findOneAndUpdate({ user_id: user.user_id }, { token: newToken }, { new: 1 });
+            }
             let accData = { username: user.username, email: user.email, token: user.token }
             let msg = { message: 'valid password', account: accData }
             res.status(200).json(msg)
@@ -87,8 +84,10 @@ router.post('/signup', async (req, res) => {
         const salt = await bcrypt.genSalt(7);
         // encrypt password
         user.password = await bcrypt.hash(user.password, salt);
+        // create user_id
+        user.user_id = user.username + user.email
         // create jwt token by using email
-        user.token = await createToken(user.username, user.email)
+        user.token = await auth.createToken(user.user_id)
         // insert account to db.
         console.log('insert ', user)
         accountCL.saveAccount(user, (err) => {
@@ -110,8 +109,17 @@ router.post('/checkLogin', async (req, res) => {
     const user = await accountCL.findOne({ email: body.email });
     if (user.token === body.token) {
         // correct email and token
-        let accData = { username: user.username, email: user.email, token: user.token }
-        res.status(200).json({ message: 'Valid cookies', account: accData })
+
+        // check expire token
+        if (!auth.checkTokenExpire(user.token)) {
+            // token still not expire.
+            let accData = { username: user.username, email: user.email, token: user.token }
+            res.status(200).json({ message: 'Valid cookies', account: accData })
+        } else {
+            // token was expired.
+            res.status(401).json({ error: 'token was expired.' })
+        }
+
     } else {
         res.status(401).json({ error: 'Invalid cookies' })
     }
@@ -162,15 +170,24 @@ router.get('/labelDes', auth, async (req, res) => {
 router.post('/label/update', auth, async (req, res) => {
     const body = req.body
     body.status = 'done'
-    body.post_id = body.post_id.toString()
-    delete body._id
-    const labels = await labelCL.findOneAndUpdate({ post_id: body.post_id.toString() }, body, { new: 1 });
-    const labelsObj = labels.toObject()
-    delete labelsObj._id
-    if (JSON.stringify(labelsObj) === JSON.stringify(body)) {
-        res.status(200).json({ message: 'Update successfully.' })
+
+    // check permissions isAdmin
+    const user = await accountCL.findOne({ user_id: req.user.user_id });
+    if (!user.isAdmin) {
+        res.status(403).json({ error: 'Your account have no permission.' })
     } else {
-        res.status(500).json({ error: 'Cannot update.' })
+        // find and update
+        body.post_id = body.post_id.toString()
+        delete body._id
+        const labels = await labelCL.findOneAndUpdate({ post_id: body.post_id.toString() }, body, { new: 1 });
+        const labelsObj = labels.toObject()
+        delete labelsObj._id
+        // check result
+        if (JSON.stringify(labelsObj) === JSON.stringify(body)) {
+            res.status(200).json({ message: 'Update successfully.' })
+        } else {
+            res.status(500).json({ error: 'Cannot update.' })
+        }
     }
 })
 
