@@ -56,9 +56,7 @@
             <td>{{ post.labeller }}</td>
             <td>
               <p class="fs-small">{{ post.status }}</p>
-              <a
-                class="btn-label"
-                :href="`/labelpost?post_id=${post.post_id}`"
+              <a class="btn-label" :href="`/labelpost?post_id=${post.post_id}`"
                 >Label</a
               >
             </td>
@@ -170,6 +168,12 @@ export default {
         });
     },
     MoveToPostIndex() {
+      const minVal = this.shownpage * (this.nPage - 1) + 1;
+      const maxVal = this.shownpage * (this.nPage - 1) + this.shownpage;
+      if (this.postIndex < minVal || this.postIndex > maxVal) {
+        this.postIndex = minVal;
+        // newVal = minVal
+      }
       document.getElementById("postIndex" + this.postIndex).focus();
     },
   },
