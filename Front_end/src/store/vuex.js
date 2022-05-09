@@ -60,6 +60,7 @@ export default new Vuex.Store({
             if (val == false) {
                 state.Account.username = '';
                 state.Account.email = '';
+                state.Account.token = '';
             }
         },
         setAccount(state, val) {
