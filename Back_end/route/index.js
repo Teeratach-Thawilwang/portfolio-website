@@ -22,9 +22,9 @@ const JWT = require("jsonwebtoken")
 
 /******************* Useful function *******************/
 // These function might be move to helpers folder
-const createToken = async (email, expiretime = '2h') => {
+const createToken = async (username, email, expiretime = '30d') => {
     return JWT.sign(
-        { user_id: email },
+        { user_id: username+email },
         process.env.TOKEN_KEY,
         {
             expiresIn: expiretime
@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/signin', async (req, res) => {
+router.post('/signup', async (req, res) => {
     const body = req.body
     if (!(body.email && body.password)) {
         return res.status(400).send({ error: "Data not formatted properly" });
@@ -88,16 +88,16 @@ router.post('/signin', async (req, res) => {
         // encrypt password
         user.password = await bcrypt.hash(user.password, salt);
         // create jwt token by using email
-        let token = await createToken(user.email)
-        user.token = token
+        user.token = await createToken(user.username, user.email)
         // insert account to db.
         console.log('insert ', user)
         accountCL.saveAccount(user, (err) => {
             if (err) {
-                console.log('Error in /signin : ', err)
+                console.log('Error in /signup : ', err)
                 res.status(500).json({ error: 'Cannot create account.' })
             } else {
-                res.status(200).json({ message: 'Create account successfully.', token: token })
+                let accData = { username: user.username, email: user.email, token: user.token }
+                res.status(200).json({ message: 'Create account successfully.', account: accData })
             }
         })
     } else {
@@ -110,7 +110,7 @@ router.post('/checkLogin', async (req, res) => {
     const user = await accountCL.findOne({ email: body.email });
     if (user.token === body.token) {
         // correct email and token
-        let accData = { username: user.username, email: body.email }
+        let accData = { username: user.username, email: user.email, token: user.token }
         res.status(200).json({ message: 'Valid cookies', account: accData })
     } else {
         res.status(401).json({ error: 'Invalid cookies' })
