@@ -188,6 +188,7 @@ export default {
   visibility: visible;
   transform: translate(10, -2vw);
   transform: rotate(0deg);
+  box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
 }
 /* End Tooltip */
 
@@ -198,14 +199,13 @@ export default {
   display: none;
   position: fixed;
   bottom: 50px;
-  right: 10px;
+  right: 1rem;
   font-size: 1.5rem;
   padding: 0.5rem;
   border-radius: 10px;
-}
-.move-top-bottom:hover {
   color: #000;
   background-color: #fff;
+  box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
 }
 
 @media screen and (max-width: 700px) {
