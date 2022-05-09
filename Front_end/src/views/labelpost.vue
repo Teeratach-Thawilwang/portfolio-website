@@ -72,6 +72,9 @@
           </div>
         </div>
         <button class="btn-submit" @click="submit()">Submit</button>
+        <div v-if="ErrorMSG != ''" class="m-t-1 p-1-0 bg-red b-r-10px">
+          <p class="fs-normal text-center c-white">{{ErrorMSG}}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -94,6 +97,7 @@ export default {
       category: null,
       hideDetail: true,
       headerData: null,
+      ErrorMSG : '',
     };
   },
   computed: {
@@ -183,12 +187,13 @@ export default {
         });
     },
     submit() {
-      this.label.labeller = this.getAccount.nickname;
+      this.label.labeller = this.getAccount.username;
       axios
         .post(this.$BackendURL + "label/update", this.label, this.headerData)
         .then((res) => {
           // console.log("Axios Submit success : ", res.data);
           // update success, redirect to post table
+          this.ErrorMSG = ''
           this.$router.push("label");
         })
         .catch((err) => {
