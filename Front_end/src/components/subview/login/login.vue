@@ -201,6 +201,8 @@ export default {
               username: res.data.account.username,
               email: res.data.account.email,
             });
+            // set token to vuex
+            this.setToken(res.data.account.token);
             // set cookies login
             if (this.inputForm.remember) {
               let loginCookies = {
@@ -238,6 +240,8 @@ export default {
             this.setLoginStatus(true);
             console.log("in signin success ", accData);
             this.setAccount(accData);
+            // set token to vuex
+            this.setToken(res.data.token);
             // set cookies login
             if (this.inputForm.remember) {
               let loginCookies = {
@@ -266,6 +270,9 @@ export default {
     },
     setAccount(val) {
       this.$store.dispatch("setAccountAction", val);
+    },
+    setToken(val){
+      this.$store.dispatch("setTokenAction", val);
     },
     ChooseLonginSignin(val) {
       this.formChoiceActive = val;
