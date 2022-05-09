@@ -24,7 +24,7 @@ let labelSchema = mongoose.Schema({
     SharePost: Boolean,
     Video: Boolean,
     Deleted: Boolean,
-}, { collection: 'label' })
+}, { collection: 'label', timestamps: {} })
 
 // create model
 let labels = labelClient.model("label", labelSchema)
