@@ -17,7 +17,7 @@
       </p>
       <p class="text-normal">
         This website has been made to accommodate Fake news Labeling. Only users
-        who have permission can access the Labeling page.
+        who have permission can label the posts.
       </p>
     </div>
     <div id="topic-2" class="content-container">
