@@ -3,6 +3,9 @@ const router = express.Router();
 const fs = require('fs')
 const path = require('path');
 
+// import middleware
+const auth = require("../middleware/auth")
+
 // import chat model
 var accountCL = require('../models/account');
 var postCL = require('../models/post');
@@ -114,8 +117,8 @@ router.post('/checkLogin', async (req, res) => {
     }
 })
 
-
-router.get('/getPosts', async (req, res) => {
+/* Label  */
+router.get('/getPosts', auth, async (req, res) => {
     const body = req.query
     let postCount = await postCL.count({})
     const nSkip = (body.nPage - 1) * body.row
@@ -139,24 +142,24 @@ router.get('/getPosts', async (req, res) => {
     }
 })
 
-router.get('/posts', async (req, res) => {
+router.get('/posts', auth, async (req, res) => {
     const body = req.query
     const posts = await postCL.findOne({ post_id: body.post_id.toString() })
     res.status(200).json({ posts: posts })
 })
 
-router.get('/label', async (req, res) => {
+router.get('/label', auth, async (req, res) => {
     const body = req.query
     const labels = await labelCL.findOne({ post_id: body.post_id.toString() })
     res.status(200).json({ labels: labels })
 })
 
-router.get('/labelDes', async (req, res) => {
+router.get('/labelDes', auth, async (req, res) => {
     const labelDes = await labelDesCL.find({})
     res.status(200).json({ labelDes: labelDes[0] })
 })
 
-router.post('/label/update', async (req, res) => {
+router.post('/label/update', auth, async (req, res) => {
     const body = req.body
     body.status = 'done'
     body.post_id = body.post_id.toString()
@@ -184,7 +187,7 @@ router.get('/html', (req, res) => {
     })
 })
 
-router.get('/getPostImage/:post_id', async (req, res) => {
+router.get('/getPostImage/:post_id', auth, async (req, res) => {
     const body = req.params
     const filePath = `../../data/image/`
     const fileName = `_postID_${body.post_id}_`
