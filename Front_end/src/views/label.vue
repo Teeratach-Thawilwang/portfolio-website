@@ -283,7 +283,6 @@ a {
   // border: 1px solid #fff;
 }
 
-.goPostId span:hover,
 .pagination span:hover {
   border-radius: 3px;
   background-color: v-bind(themeColorNormal);
