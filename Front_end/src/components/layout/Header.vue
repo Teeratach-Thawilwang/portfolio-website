@@ -67,7 +67,6 @@ export default {
     },
     setLogoutStatus() {
       this.$store.dispatch("setLoginAction", false);
-      this.$store.dispatch("setTokenAction", null);
       this.cookies.remove("session");
       this.$router.push('/')
     },
