@@ -182,6 +182,7 @@ router.post('/label/update', auth, async (req, res) => {
         const labels = await labelCL.findOneAndUpdate({ post_id: body.post_id.toString() }, body, { new: 1 });
         const labelsObj = labels.toObject()
         delete labelsObj._id
+        delete labelsObj.updatedAt
         // check result
         if (JSON.stringify(labelsObj) === JSON.stringify(body)) {
             res.status(200).json({ message: 'Update successfully.' })
