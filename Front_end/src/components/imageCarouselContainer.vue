@@ -70,14 +70,36 @@ export default {
   width: 100%;
   /* border: 1px solid red; */
 }
+@keyframes frameHoverBoxShadowIn {
+  from{
+    box-shadow: none
+  }
+  to{
+    box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+@keyframes frameHoverBoxShadowOut {
+  from{
+    box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
+  }
+  to{
+    box-shadow: none
+  }
+}
 .carousel-frame {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 100%;
   overflow: hidden;
+  animation: frameHoverBoxShadowOut 0.4s;
   /* border: 1px solid red; */
 }
+.carousel-frame:hover{
+  animation: frameHoverBoxShadowIn 0.4s;
+  box-shadow: 5px 5px 20px 20px rgba(0, 0, 0, 0.15);
+}
+
 .carousel {
   position: absolute;
   width: 100%;
