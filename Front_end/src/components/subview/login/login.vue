@@ -128,7 +128,7 @@ export default {
         email: "",
         password: "",
         passwordConfirm: "",
-        remember: false,
+        remember: true,
       },
       loginResponse: "",
     };
