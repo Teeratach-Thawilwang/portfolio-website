@@ -80,8 +80,8 @@ export default {
     };
   },
   computed: {
-    getToken() {
-      return this.$store.getters.getToken;
+    getAccount() {
+      return this.$store.getters.getAccount;
     },
     themeColorNormal() {
       return this.$store.getters.getThemeColorNormal;
@@ -127,7 +127,7 @@ export default {
     },
     postIndex(newVal) {
       // set data to vuex
-      this.$store.dispatch("setLabelPageIndexAction", newVal);
+      this.$store.dispatch("setLabelPostIndexAction", newVal);
     },
   },
   methods: {
@@ -151,7 +151,7 @@ export default {
       const param = "?nPage=" + nPage + "&row=" + row;
       const data = {
         headers: {
-          "x-access-token": this.getToken,
+          "x-access-token": this.getAccount.token,
           "content-type": "application/json",
         },
       };

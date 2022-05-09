@@ -23,10 +23,10 @@
           {{ posts.post_text }}
         </div>
         <div class="image-post" v-if="image != null">
-          <imageCarouselGeneral
-            :Images="image"
-            class="image-Carousel"
-          ></imageCarouselGeneral>
+            <imageCarouselGeneral
+              :Images="image"
+              class="image-Carousel"
+            ></imageCarouselGeneral>
         </div>
       </div>
     </div>
@@ -97,17 +97,14 @@ export default {
     };
   },
   computed: {
-    getToken() {
-      return this.$store.getters.getToken;
+    getAccount() {
+      return this.$store.getters.getAccount;
     },
     themeColorNormal() {
       return this.$store.getters.getThemeColorNormal;
     },
     themeColorInvert() {
       return this.$store.getters.getThemeColorInvert;
-    },
-    getAccount() {
-      return this.$store.getters.getAccount;
     },
   },
   watch: {
@@ -215,7 +212,7 @@ export default {
     this.setSidebarTopic();
   },
   mounted() {
-    this.setHeader(this.getToken);
+    this.setHeader(this.getAccount.token);
     this.getPostID(this.param.post_id);
     this.getImage(this.param.post_id);
     this.getLabel(this.param.post_id);
