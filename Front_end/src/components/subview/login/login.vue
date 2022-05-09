@@ -28,13 +28,13 @@
         <label>Nickname</label>
         <input
           type="text"
-          id="nickname"
+          id="username"
           placeholder="Enter nickname"
-          v-model="inputForm.nickname"
+          v-model="inputForm.username"
           @keyup.enter="focusNextInputForm($event, 'email')"
         />
-        <p v-if="v$.inputForm.nickname.$error">
-          {{ v$.inputForm.nickname.$errors[0].$message }}
+        <p v-if="v$.inputForm.username.$error">
+          {{ v$.inputForm.username.$errors[0].$message }}
         </p>
       </div>
       <div class="form-element">
@@ -124,7 +124,7 @@ export default {
       cntClickComponent: 0,
       formChoiceActive: "login",
       inputForm: {
-        nickname: "",
+        username: "",
         email: "",
         password: "",
         passwordConfirm: "",
@@ -136,10 +136,10 @@ export default {
   validations() {
     return {
       inputForm: {
-        nickname: {
-          required: helpers.withMessage("Nickname is required.", required),
+        username: {
+          required: helpers.withMessage("username is required.", required),
           minLength: helpers.withMessage(
-            "Nickname must have at least 6 characters.",
+            "username must have at least 6 characters.",
             minLength(6)
           ),
         },
@@ -200,9 +200,8 @@ export default {
             this.setAccount({
               username: res.data.account.username,
               email: res.data.account.email,
+              token: res.data.account.token,
             });
-            // set token to vuex
-            this.setToken(res.data.account.token);
             // set cookies login
             if (this.inputForm.remember) {
               let loginCookies = {
@@ -221,14 +220,14 @@ export default {
           });
       } else if (
         this.formChoiceActive === "signin" &&
-        !this.v$.inputForm.nickname.$error &&
+        !this.v$.inputForm.username.$error &&
         !this.v$.inputForm.email.$error &&
         !this.v$.inputForm.password.$error &&
         !this.v$.inputForm.passwordConfirm.$error
       ) {
         // if no error validation, send signin form
         let accData = {
-          username: this.inputForm.nickname,
+          username: this.inputForm.username,
           email: this.inputForm.email,
           password: this.inputForm.password,
         };
@@ -240,8 +239,6 @@ export default {
             this.setLoginStatus(true);
             console.log("in signin success ", accData);
             this.setAccount(accData);
-            // set token to vuex
-            this.setToken(res.data.token);
             // set cookies login
             if (this.inputForm.remember) {
               let loginCookies = {
@@ -270,9 +267,6 @@ export default {
     },
     setAccount(val) {
       this.$store.dispatch("setAccountAction", val);
-    },
-    setToken(val){
-      this.$store.dispatch("setTokenAction", val);
     },
     ChooseLonginSignin(val) {
       this.formChoiceActive = val;

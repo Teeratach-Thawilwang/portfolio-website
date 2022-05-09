@@ -142,7 +142,7 @@ export default {
   watch: {
     getAccount(val) {
       if (val !== "") {
-        this.formInput.username = val.nickname;
+        this.formInput.username = val.username;
       }
     },
   },

@@ -3,11 +3,11 @@ import createPersistedState from "vuex-persistedstate";
 
 export default new Vuex.Store({
     state: {
-        token: null,
         loginStatus: false,
         Account: {
-            nickname: "",
+            username: "",
             email: "",
+            token: "",
         },
         themeColor: "dark",
         themeColorSet: {
@@ -29,9 +29,6 @@ export default new Vuex.Store({
         LabelPostIndex: 1,
     },
     mutations: {
-        setToken(state, val) {
-            state.token = val
-        },
         changeTheme(state, value) {
             if (value === "white") {
                 state.themeColor = "white";
@@ -61,13 +58,14 @@ export default new Vuex.Store({
         setLogin(state, val) {
             state.loginStatus = val;
             if (val == false) {
-                state.Account.nickname = '';
+                state.Account.username = '';
                 state.Account.email = '';
             }
         },
         setAccount(state, val) {
-            state.Account.nickname = val.username;
+            state.Account.username = val.username;
             state.Account.email = val.email;
+            state.Account.token = val.token;
         },
         setTopic(state, val) {
             state.topics = val
@@ -83,11 +81,8 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        setTokenAction(context, val) {
-            context.commit('setToken', val)
-        },
-        changeThemeAction(context, themeColor) {
-            context.commit('changeTheme', themeColor);
+        changeThemeAction(context, val) {
+            context.commit('changeTheme', val);
         },
         setLoginAction(context, val) {
             context.commit('setLogin', val)
@@ -109,9 +104,6 @@ export default new Vuex.Store({
         }
     },
     getters: {
-        getToken(state) {
-            return state.token;
-        },
         getThemeColor(state) {
             return state.themeColor;
         },
@@ -135,8 +127,9 @@ export default new Vuex.Store({
                 return state.Account
             } else {
                 return {
-                    nickname: "",
+                    username: "",
                     email: "",
+                    token: "",
                 }
             }
         },
