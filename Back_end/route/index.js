@@ -217,14 +217,18 @@ router.post("/label/update", auth, async (req, res) => {
 router.get("/html", (req, res) => {
     const body = req.query;
     const filePath = `../../data/html/post_url_${body.page_name}_posts_${body.post_id}.html`;
-    fs.readFile(filePath, "utf8", (err, data) => {
-        if (err) {
-            res.status(401).json({ error: "No such file or directory" });
-        } else {
-            res.set("Content-Type", "text/html");
-            res.send(data.toString());
-        }
-    });
+    try {
+        fs.readFile(filePath, "utf8", (err, data) => {
+            if (err) {
+                res.status(401).json({ error: "No such file or directory" });
+            } else {
+                res.set("Content-Type", "text/html");
+                res.send(data.toString());
+            }
+        });
+    } catch (err) {
+        res.status(401).json({ error: "No such file or directory" });
+    }
 });
 
 router.get("/getPostImage/:post_id", auth, async (req, res) => {
@@ -232,23 +236,31 @@ router.get("/getPostImage/:post_id", auth, async (req, res) => {
     const filePath = `../../data/image/`;
     const fileName = `_postID_${body.post_id}_`;
     const fileNameList = [];
-    fs.readdirSync(filePath).forEach((file) => {
-        if (file.includes(fileName)) {
-            fileNameList.push(file);
-        }
-        return;
-    });
-    res.status(200).json({ image: fileNameList });
+    try {
+        fs.readdirSync(filePath).forEach((file) => {
+            if (file.includes(fileName)) {
+                fileNameList.push(file);
+            }
+            return;
+        });
+        res.status(200).json({ image: fileNameList });
+    } catch (err) {
+        res.status(401).json({ error: "No such file or directory" });
+    }
 });
 
 router.get("/postImage/:filename", async (req, res) => {
     const body = req.params;
     const filePath = `../../data/image/` + body.filename;
-    res.status(200).sendFile(path.resolve(filePath), (err) => {
-        if (err) {
-            res.status(401).json({ error: "No such file or directory" });
-        }
-    });
+    try {
+        res.status(200).sendFile(path.resolve(filePath), (err) => {
+            if (err) {
+                res.status(401).json({ error: "No such file or directory" });
+            }
+        });
+    } catch (err) {
+        res.status(401).json({ error: "No such file or directory" });
+    }
 });
 
 router.get("/labelCount/:status", async (req, res) => {
