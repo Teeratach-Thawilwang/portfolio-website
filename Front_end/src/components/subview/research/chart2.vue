@@ -2,7 +2,9 @@
   <div class="p-t-1">
     <div class="content-containe">
       <div class="chart-container">
-        <canvas id="topic2-chart-2"></canvas>
+        <div v-show="renderChart">
+          <canvas id="topic2-chart-2"></canvas>
+        </div>
       </div>
       <p class="fs-normal text-center">Fake news Histogram</p>
     </div>
@@ -11,11 +13,13 @@
 
 <script>
 import Chart from "chart.js/auto";
+import axios from "axios";
 export default {
   name: "chart2-component",
   data() {
     this.chart = null;
     return {
+      renderChart: false,
       topic2: {
         xValue: [
           "satire",
@@ -44,6 +48,12 @@ export default {
       console.log(val);
       this.chart.options = this.ChartOptions(val);
       this.chart.update();
+    },
+    renderChart(val) {
+      if (val) {
+        // console.log("renderChart", val);
+        this.CreateChart();
+      }
     },
   },
   methods: {
@@ -94,7 +104,7 @@ export default {
       return config;
     },
     CreateChart(fontColor = this.themeColorNormal) {
-      console.log("on CreateChart");
+      console.log("on CreateChart2");
       let canvas = document.getElementById("topic2-chart-2").getContext("2d");
       let option = this.ChartOptions(fontColor);
       let config = this.ChartData();
@@ -102,10 +112,25 @@ export default {
       Chart.defaults.font.size = 16;
       this.chart = new Chart(canvas, config);
     },
+    getLabelCategoryCount() {
+      axios
+        .get(this.$BackendURL + "labelCategoryCount" )
+        .then((res) => {
+          // console.log("getLabelCategoryCount", Object.keys(res.data.labelCategory));
+          this.topic2.xValue = Object.keys(res.data.labelCategory);
+          this.topic2.yValue = Object.values(res.data.labelCategory);
+          this.renderChart = true;
+        })
+        .catch((err) => {
+          console.log("Axios getLabelCategoryCount err : ", err.response.data);
+          // show error message from server
+          this.ErrorMSG = err.response.data.error;
+        });
+    },
   },
   mounted() {
     // console.log("on mounted");
-    this.CreateChart();
+    this.getLabelCategoryCount()
   },
 };
 </script>
@@ -119,7 +144,7 @@ export default {
   height: 250px;
   /* background-color: #6dc362; */
 }
-.chart-container canvas {
+.chart-container div {
   width: 100% !important;
   height: 100% !important;
 }

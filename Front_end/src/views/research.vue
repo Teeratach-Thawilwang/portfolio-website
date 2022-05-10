@@ -2,7 +2,7 @@
   <div class="view-research-container">
     <div id="topic-1" class="content-container">
       <h1 class="text-header">
-        Research Detail (uncomplete)
+        Research Detail
         <hr />
       </h1>
       <p class="text-normal">
@@ -22,7 +22,7 @@
     </div>
     <div id="topic-2" class="content-container">
       <h1 class="text-header">
-        Dataset Overview (mock data)
+        Dataset Overview
         <hr />
       </h1>
       <div class="d-grid2-1-1 d-block-900px">

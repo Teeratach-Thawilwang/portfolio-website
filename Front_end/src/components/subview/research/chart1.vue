@@ -2,24 +2,33 @@
   <div class="p-t-1">
     <div class="content-containe">
       <div class="chart-container">
-        <canvas id="topic2-chart-1"></canvas>
+        <p @click="toggleStatus()">
+          {{ status == "done" ? "ข้อมูล Label เเล้ว" : "ข้อมูลทั้งหมด" }}
+        </p>
+        <div v-show="renderChart">
+          <canvas id="topic2-chart-1"></canvas>
+        </div>
       </div>
-      <p class="fs-normal text-center">The number of fake/real news</p>
+      <p class="fs-normal text-center">{{ status == "done" ? "The number of labeled news" : "The number of total news" }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import Chart from "chart.js/auto";
+import axios from "axios";
 export default {
   name: "chart1-component",
   data() {
     this.chart = null;
     return {
+      status: "done",
+      renderChart: false,
+      updateChart: false,
       topic2: {
-        xValue: ["Fake", "Real"],
-        yValue: [2315, 7854],
-        barColors: ["#d24369", "#5585cb"],
+        xValue: ["Real", "Fake"],
+        yValue: [0, 0],
+        barColors: ["#5585cb", "#d24369"],
       },
     };
   },
@@ -33,9 +42,25 @@ export default {
   },
   watch: {
     themeColorNormal(val) {
-      console.log(val);
-      this.chart.options = this.ChartOptions(val);
-      this.chart.update();
+      // console.log(val);
+      if (this.renderChart) {
+        this.chart.options = this.ChartOptions(val);
+        this.chart.update();
+      }
+    },
+    renderChart(val) {
+      if (val) {
+        // console.log("renderChart", val);
+        this.CreateChart();
+      }
+    },
+    updateChart(val) {
+      if (val && this.renderChart) {
+        // console.log("updateChart", val);
+        this.chart.data.labels = this.topic2.xValue;
+        this.chart.data.datasets[0].data = this.topic2.yValue;
+        this.chart.update();
+      }
     },
   },
   methods: {
@@ -57,15 +82,16 @@ export default {
       };
       return options;
     },
-    ChartData() {
+    ChartData(DataChart = this.topic2) {
+      // console.log("ChartData", DataChart);
       let config = {
         type: "pie",
         data: {
-          labels: this.topic2.xValue,
+          labels: DataChart.xValue,
           datasets: [
             {
-              data: this.topic2.yValue,
-              backgroundColor: this.topic2.barColors,
+              data: DataChart.yValue,
+              backgroundColor: DataChart.barColors,
             },
           ],
         },
@@ -73,7 +99,7 @@ export default {
       return config;
     },
     CreateChart(fontColor = this.themeColorNormal) {
-      console.log("on CreateChart");
+      // console.log("on CreateChart1");
       let canvas = document.getElementById("topic2-chart-1").getContext("2d");
       let option = this.ChartOptions(fontColor);
       let config = this.ChartData();
@@ -81,23 +107,61 @@ export default {
       Chart.defaults.font.size = 16;
       this.chart = new Chart(canvas, config);
     },
+    getLabelCount() {
+      const param = "/" + this.status;
+      axios
+        .get(this.$BackendURL + "labelCount" + param)
+        .then((res) => {
+          console.log("getLabelCount", res.data.data);
+          this.topic2.xValue = Object.keys(res.data.data);
+          this.topic2.yValue = Object.values(res.data.data);
+          this.renderChart = true;
+          this.updateChart = true;
+        })
+        .catch((err) => {
+          console.log("Axios getLabelCount err : ", err.response.data);
+          // show error message from server
+          this.ErrorMSG = err.response.data.error;
+        });
+    },
+    toggleStatus() {
+      if (this.status == "done") {
+        this.status = "not done";
+      } else {
+        this.status = "done";
+      }
+      this.updateChart = false;
+      this.getLabelCount();
+    },
   },
   mounted() {
     // console.log("on mounted");
-    this.CreateChart();
+    this.getLabelCount();
   },
 };
 </script>
 
-<style scoped>
-@import "@/assets/css/font.css";
-@import "@/assets/css/layout.css";
-@import "@/assets/css/box.css";
+<style lang="scss" scoped>
+@import "@/assets/css/font";
+@import "@/assets/css/layout";
+@import "@/assets/css/box";
 
 .chart-container {
   height: 250px;
+  position: relative;
 }
-.chart-container canvas {
+.chart-container p {
+  @extend .fs-small;
+  border-radius: 5px;
+  position: absolute;
+  right: 10px;
+  padding: 1px 5px;
+}
+.chart-container p:hover {
+  background-color: #5585cb;
+  cursor: pointer;
+}
+.chart-container div {
   width: 100% !important;
   height: 100% !important;
 }
