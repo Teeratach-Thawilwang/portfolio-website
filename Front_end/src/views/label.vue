@@ -22,7 +22,7 @@
               <input
                 type="number"
                 v-model="postIndex"
-                @keydown.enter.exact="MoveToPostIndex()"
+                @change="MoveToPostIndex($event)"
               />
             </div>
             <div class="pagination">
@@ -56,7 +56,12 @@
             <td>{{ post.labeller }}</td>
             <td>
               <p class="fs-small">{{ post.status }}</p>
-              <a class="btn-label" :href="`/labelpost?post_id=${post.post_id}`"
+              <a
+                class="btn-label"
+                @click.prevent="
+                  btnLabel((nPage - 1) * shownpage + index + 1, post.post_id)
+                "
+                href="#"
                 >Label</a
               >
             </td>
@@ -77,6 +82,7 @@ export default {
       postIndex: null,
       nPage: null,
       posts: null,
+      postIndexFocus: false,
     };
   },
   computed: {
@@ -107,10 +113,11 @@ export default {
       newVal.forEach((element) => {
         element.post_time = element.post_time.split(" ")[0];
       });
+      this.postIndexFocus = !this.postIndexFocus;
     },
     shownpage(newVal) {
       newVal = parseInt(newVal);
-      this.postIndex = newVal * (this.nPage - 1) + 1;
+      this.updatePostIndex();
       this.getPosts(this.nPage, newVal);
 
       // set data to vuex
@@ -120,7 +127,13 @@ export default {
       if (newVal <= 0) {
         this.nPage = 1;
       }
-      this.postIndex = this.shownpage * (this.nPage - 1) + 1;
+      this.updatePostIndex();
+
+      // check nPage is number
+      if (Number.isInteger(this.nPage)) {
+        // if true, show data array on page number.
+        this.getPosts(this.nPage, this.shownpage);
+      }
 
       // set data to vuex
       this.$store.dispatch("setLabelnPageAction", newVal);
@@ -129,23 +142,17 @@ export default {
       // set data to vuex
       this.$store.dispatch("setLabelPostIndexAction", newVal);
     },
+    postIndexFocus(newVal) {
+      const row = document.getElementById("postIndex" + this.postIndex);
+      if (row) {
+        row.focus();
+      }
+    },
   },
   methods: {
     setSidebarTopic() {
       let topic = [{ key: "Post List", value: "hand-peace" }];
       this.$store.dispatch("setTopicAction", topic);
-    },
-    setnPage(event, val = 0) {
-      // add, minus with arrow pagination
-      if ((val != 0 && this.nPage > 1) || val == +1) {
-        this.nPage += val;
-      }
-      // check nPage is number
-      if (Number.isInteger(this.nPage)) {
-        // if true, show data array on page number.
-        this.getPosts(this.nPage, this.shownpage);
-      }
-      event.target.blur();
     },
     getPosts(nPage = 1, row = 50) {
       const param = "?nPage=" + nPage + "&row=" + row;
@@ -167,14 +174,40 @@ export default {
           this.ErrorMSG = err.response.data.error;
         });
     },
-    MoveToPostIndex() {
-      const minVal = this.shownpage * (this.nPage - 1) + 1;
-      const maxVal = this.shownpage * (this.nPage - 1) + this.shownpage;
-      if (this.postIndex < minVal || this.postIndex > maxVal) {
-        this.postIndex = minVal;
-        // newVal = minVal
+    setnPage(event, val = 0) {
+      // add, minus with arrow pagination
+      if ((val != 0 && this.nPage > 1) || val == +1) {
+        this.nPage += val;
       }
-      document.getElementById("postIndex" + this.postIndex).focus();
+      event.target.blur();
+    },
+    MoveToPostIndex(event) {
+      console.log("posdIndex set", this.postIndex);
+      this.nPage = parseInt(this.postIndex / this.shownpage) + 1;
+      this.updatePostIndex(true);
+      event.target.blur();
+    },
+    updatePostIndex(mode = 0) {
+      const minVal = this.shownpage * (this.nPage - 1) + 1;
+      const maxVal =
+        this.shownpage * (this.nPage - 1) + parseInt(this.shownpage);
+      if (this.postIndex < minVal || this.postIndex > maxVal) {
+        if (!mode) {
+          // mode=false => set postIndex
+          this.postIndex = minVal;
+        }
+      }
+      // console.log("updatePostIndex", minVal, maxVal, this.postIndex);
+      if (mode && this.postIndex >= minVal && this.postIndex <= maxVal) {
+        // mode = true => check
+        this.postIndexFocus = !this.postIndexFocus;
+      }
+    },
+    btnLabel(index, post_id) {
+      // :href="`/labelpost?post_id=${post.post_id}`"
+      const url = `/labelpost?post_id=${post_id}`;
+      this.postIndex = index;
+      this.$router.push(url);
     },
   },
   mounted() {
@@ -326,11 +359,10 @@ a {
       border: 1px solid #000;
     }
   }
-
+  tr:focus,
   tr:hover {
     background-color: rgb(230, 230, 230);
   }
-
   tr:first-child {
     @extend .fs-small;
     border: 1px solid rgb(175, 176, 177);
