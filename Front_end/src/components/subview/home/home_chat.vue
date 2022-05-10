@@ -130,6 +130,13 @@ export default {
       this.scrollHigh = chatbox.scrollHeight - chatbox.clientHeight;
       this.chatUpdate = false;
     },
+    autoSetNickname() {
+      if (this.getAccount.username !== "") {
+        this.formInput.username = this.getAccount.username;
+      } else {
+        this.formInput.username = "";
+      }
+    },
   },
   computed: {
     ThemeColor() {
@@ -141,14 +148,17 @@ export default {
   },
   watch: {
     getAccount(val) {
-      if (val !== "") {
+      if (val.username != "") {
         this.formInput.username = val.username;
+      } else {
+        this.formInput.username = "";
       }
     },
   },
   mounted() {
     // console.log("on mounted");
     this.scrollCommentDown();
+    this.autoSetNickname();
   },
   updated() {
     // console.log("on update");
