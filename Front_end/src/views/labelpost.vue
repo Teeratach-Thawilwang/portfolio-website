@@ -226,10 +226,11 @@ export default {
 };
 </script>
 
-<style scoped>
-@import "@/assets/css/font.css";
-@import "@/assets/css/layout.css";
-@import "@/assets/css/box.css";
+<style lang="scss" scoped>
+@import "@/assets/css/font";
+@import "@/assets/css/layout";
+@import "@/assets/css/box";
+
 hr {
   border: 1px solid v-bind(themeColorNormal);
   background-color: v-bind(themeColorNormal);
@@ -244,12 +245,6 @@ a {
   margin-bottom: 5rem;
   /* border: 1px solid skyblue; */
 }
-</style>
-
-<style lang="scss" scoped>
-@import "@/assets/css/font";
-@import "@/assets/css/layout";
-@import "@/assets/css/box";
 
 .text-header {
   @extend .fs-big;
@@ -303,6 +298,7 @@ a {
   @extend .fs-normal;
   padding: 0.5rem 1rem;
   word-wrap: break-word;
+  word-break: break-word;   // Prevent overflow text. This fixed child make parent's width expend.
   word-spacing: 1px;
   white-space: pre-wrap;
   line-height: 1.75rem;
