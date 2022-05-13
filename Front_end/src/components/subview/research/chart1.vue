@@ -9,7 +9,13 @@
           <canvas id="topic2-chart-1"></canvas>
         </div>
       </div>
-      <p class="fs-normal text-center">{{ status == "done" ? "The number of labeled news" : "The number of total news" }}</p>
+      <p class="fs-normal text-center">
+        {{
+          status == "done"
+            ? "The number of labeled news"
+            : "The number of total news"
+        }}
+      </p>
     </div>
   </div>
 </template>
@@ -147,7 +153,8 @@ export default {
 @import "@/assets/css/box";
 
 .chart-container {
-  height: 250px;
+  height: 350px;
+  padding: 30px;
   position: relative;
 }
 .chart-container p {

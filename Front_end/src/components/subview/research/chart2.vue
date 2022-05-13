@@ -6,7 +6,7 @@
           <canvas id="topic2-chart-2"></canvas>
         </div>
       </div>
-      <p class="fs-normal text-center">Fake news Histogram</p>
+      <p class="fs-normal text-center">News Histogram</p>
     </div>
   </div>
 </template>
@@ -21,16 +21,8 @@ export default {
     return {
       renderChart: false,
       topic2: {
-        xValue: [
-          "satire",
-          "misleading",
-          "imposter",
-          "fabricate",
-          "false conection",
-          "false context",
-          "manipulated content",
-        ],
-        yValue: [810, 512, 3512, 2546, 921, 975, 1230],
+        xValue: [],
+        yValue: [],
         barColors: ["#d24369", "#5585cb", "#6dc362"],
       },
     };
@@ -141,7 +133,7 @@ export default {
 @import "@/assets/css/box.css";
 
 .chart-container {
-  height: 250px;
+  height: 350px;
   /* background-color: #6dc362; */
 }
 .chart-container div {
