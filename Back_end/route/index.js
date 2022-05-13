@@ -295,6 +295,8 @@ router.get("/labelCategoryCount", async (req, res) => {
     const countMisreporting = await labelCL.where({ Misreporting: true, status: 'done', Real: false }).count();
     const countNoReference = await labelCL.where({ NoReference: true, status: 'done', Real: false }).count();
     const countSharePost = await labelCL.where({ SharePost: true, status: 'done', Real: false }).count();
+    const countVideoPost = await labelCL.where({ Video: true, status: 'done', Real: false }).count();
+    const countDeletedPost = await labelCL.where({ Deleted: true, status: 'done', Real: false }).count();
     const label = {
         Satire: countSatire,
         FalseNews: countFalseNews,
@@ -304,6 +306,8 @@ router.get("/labelCategoryCount", async (req, res) => {
         Misreporting: countMisreporting,
         NoReference: countNoReference,
         SharePost: countSharePost,
+        Video: countVideoPost,
+        Deleted: countDeletedPost
     }
     res.status(200).json({ labelCategory: label });
 });
