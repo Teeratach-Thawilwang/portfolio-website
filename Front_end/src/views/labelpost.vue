@@ -213,8 +213,8 @@ export default {
   },
 
   created() {
-    // console.log("on create", this.param);
     this.setSidebarTopic();
+    window.scrollTo(0, 0);
   },
   mounted() {
     this.setHeader(this.getAccount.token);
