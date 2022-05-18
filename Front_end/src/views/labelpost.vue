@@ -300,7 +300,7 @@ a {
   word-wrap: break-word;
   word-break: break-word;   // Prevent overflow text. This fixed child make parent's width expend.
   word-spacing: 1px;
-  white-space: pre-wrap;
+  white-space: pre-line;
   line-height: 1.75rem;
 }
 
