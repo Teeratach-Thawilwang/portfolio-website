@@ -1,22 +1,20 @@
 <template>
   <div class="p-t-1">
-    <div class="content-containe">
-      <div class="chart-container">
-        <p @click="toggleStatus()">
-          {{ status == "done" ? "ข้อมูล Label เเล้ว" : "ข้อมูลทั้งหมด" }}
-        </p>
-        <div v-show="renderChart">
-          <canvas id="topic2-chart-1"></canvas>
-        </div>
-      </div>
-      <p class="fs-normal text-center">
-        {{
-          status == "done"
-            ? "The number of labeled news"
-            : "The number of total news"
-        }}
+    <div class="chart-container">
+      <p @click="toggleStatus()">
+        {{ status == "done" ? "ข้อมูล Label เเล้ว" : "ข้อมูลทั้งหมด" }}
       </p>
+      <div v-show="renderChart">
+        <canvas id="topic2-chart-1"></canvas>
+      </div>
     </div>
+    <p class="fs-normal text-center">
+      {{
+        status == "done"
+          ? "The number of labeled news"
+          : "The number of total news"
+      }}
+    </p>
   </div>
 </template>
 

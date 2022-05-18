@@ -1,13 +1,11 @@
 <template>
   <div class="p-t-1">
-    <div class="content-containe">
-      <div class="chart-container">
-        <div v-show="renderChart">
-          <canvas id="topic2-chart-2"></canvas>
-        </div>
+    <div class="chart-container">
+      <div v-show="renderChart">
+        <canvas id="topic2-chart-2"></canvas>
       </div>
-      <p class="fs-normal text-center">News Histogram</p>
     </div>
+    <p class="fs-normal text-center">News Histogram</p>
   </div>
 </template>
 
@@ -106,7 +104,7 @@ export default {
     },
     getLabelCategoryCount() {
       axios
-        .get(this.$BackendURL + "labelCategoryCount" )
+        .get(this.$BackendURL + "labelCategoryCount")
         .then((res) => {
           // console.log("getLabelCategoryCount", Object.keys(res.data.labelCategory));
           this.topic2.xValue = Object.keys(res.data.labelCategory);
@@ -122,7 +120,7 @@ export default {
   },
   mounted() {
     // console.log("on mounted");
-    this.getLabelCategoryCount()
+    this.getLabelCategoryCount();
   },
 };
 </script>
