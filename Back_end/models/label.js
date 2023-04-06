@@ -23,6 +23,7 @@ let labelSchema = mongoose.Schema({
     NoReference: Boolean,
     SharePost: Boolean,
     Video: Boolean,
+    Exclude: Boolean,
     Deleted: Boolean,
 }, { collection: 'label', timestamps: {} })
 

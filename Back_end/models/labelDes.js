@@ -20,6 +20,7 @@ let labelDesSchema = mongoose.Schema({
     NoReference: String,
     SharePost: String,
     Video: String,
+    Exclude: String,
     Deleted: String,
 }, { collection: 'labelDes' })
 
