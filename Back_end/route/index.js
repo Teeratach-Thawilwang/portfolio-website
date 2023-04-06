@@ -175,13 +175,12 @@ router.get("/posts", auth, async (req, res) => {
 
 router.get("/label", auth, async (req, res) => {
     const body = req.query;
-    const labels = await labelCL.findOne({ post_id: body.post_id.toString() });
-    delete labels.updatedAt;
+    var labels = await labelCL.findOne({ post_id: body.post_id.toString() }).select('-_id');
     res.status(200).json({ labels: labels });
 });
 
 router.get("/labelDes", auth, async (req, res) => {
-    const labelDes = await labelDesCL.find({});
+    const labelDes = await labelDesCL.find({}).select('-_id');
     res.status(200).json({ labelDes: labelDes[0] });
 });
 
@@ -234,7 +233,7 @@ router.get("/html", (req, res) => {
 
 router.get("/getPostImage/:post_id", auth, async (req, res) => {
     const body = req.params;
-    const filePath = `../../data/image/`;
+    const filePath = path.resolve(__dirname, `../../data/image/`);
     const fileName = `_postID_${body.post_id}_`;
     const fileNameList = [];
     try {
@@ -252,7 +251,7 @@ router.get("/getPostImage/:post_id", auth, async (req, res) => {
 
 router.get("/postImage/:filename", async (req, res) => {
     const body = req.params;
-    const filePath = `../../data/image/` + body.filename;
+    const filePath = path.resolve(__dirname, `../../data/image/`, body.filename);
     try {
         res.status(200).sendFile(path.resolve(filePath), (err) => {
             if (err) {
