@@ -23,10 +23,10 @@
           {{ posts.post_text }}
         </div>
         <div class="image-post" v-if="image != null">
-            <imageCarouselGeneral
-              :Images="image"
-              class="image-Carousel"
-            ></imageCarouselGeneral>
+          <imageCarouselGeneral
+            :Images="image"
+            class="image-Carousel"
+          ></imageCarouselGeneral>
         </div>
       </div>
     </div>
@@ -42,19 +42,13 @@
           <div v-for="(val, index) in label" :key="index">
             <hr
               v-if="
-                index != '_id' &&
-                index != 'labeller' &&
-                index != 'status' &&
-                index != 'post_id'
+                category.hasOwnProperty(index)
               "
             />
             <label
               class="checkbox-item"
               v-if="
-                index != '_id' &&
-                index != 'labeller' &&
-                index != 'status' &&
-                index != 'post_id'
+                category.hasOwnProperty(index)
               "
             >
               <input
@@ -64,8 +58,8 @@
                 :id="index"
               />
               <span></span>
-              <label class="fs-normal" :for="index"
-                ><p class="fw-bold">{{ index }}</p>
+              <label class="fs-normal" :for="index">
+                <p class="fw-bold">{{ index }}</p>
                 <p v-if="hideDetail">{{ category[index] }}</p></label
               >
             </label>
@@ -73,7 +67,7 @@
         </div>
         <button class="btn-submit" @click="submit()">Submit</button>
         <div v-if="ErrorMSG != ''" class="m-t-1 p-1-0 bg-red b-r-10px">
-          <p class="fs-normal text-center c-white">{{ErrorMSG}}</p>
+          <p class="fs-normal text-center c-white">{{ ErrorMSG }}</p>
         </div>
       </div>
     </div>
@@ -97,7 +91,7 @@ export default {
       category: null,
       hideDetail: true,
       headerData: null,
-      ErrorMSG : '',
+      ErrorMSG: "",
     };
   },
   computed: {
@@ -193,7 +187,7 @@ export default {
         .then((res) => {
           // console.log("Axios Submit success : ", res.data);
           // update success, redirect to post table
-          this.ErrorMSG = ''
+          this.ErrorMSG = "";
           this.$router.push("label");
         })
         .catch((err) => {
@@ -298,7 +292,7 @@ a {
   @extend .fs-normal;
   padding: 0.5rem 1rem;
   word-wrap: break-word;
-  word-break: break-word;   // Prevent overflow text. This fixed child make parent's width expend.
+  word-break: break-word; // Prevent overflow text. This fixed child make parent's width expend.
   word-spacing: 1px;
   white-space: pre-line;
   line-height: 1.75rem;
