@@ -267,18 +267,18 @@ router.get("/labelCount/:status", async (req, res) => {
     const body = req.params;
     if (body.status == 'done') {
         const Real = await labelCL
-            .where({ Real: true, Video: false, Deleted: false, status: 'done' })
+            .where({ Real: true, status: 'done' })
             .count();
         const Fake = await labelCL
-            .where({ Real: false, Video: false, Deleted: false, status: 'done' })
+            .where({ Real: false, status: 'done' })
             .count();
         res.status(200).json({ data: { Real: Real, Fake: Fake } });
     } else {
         const Labeled = await labelCL
-            .where({ status: 'done', Video: false, Deleted: false })
+            .where({ status: 'done'})
             .count();
         const NotLabel = await labelCL
-            .where({ status: 'not done', Video: false, Deleted: false })
+            .where({ status: 'not done'})
             .count();
         res.status(200).json({ data: { Labeled: Labeled, "Not Label": NotLabel } });
     }
@@ -286,16 +286,15 @@ router.get("/labelCount/:status", async (req, res) => {
 
 router.get("/labelCategoryCount", async (req, res) => {
     const body = req.params;
-    const countSatire = await labelCL.where({ Satire: true, status: 'done', Real: false }).count();
-    const countFalseNews = await labelCL.where({ FalseNews: true, status: 'done', Real: false }).count();
-    const countCommentary = await labelCL.where({ Commentary: true, status: 'done', Real: false }).count();
-    const countPersuasive = await labelCL.where({ Persuasive: true, status: 'done', Real: false }).count();
-    const countPolarizing = await labelCL.where({ Polarizing: true, status: 'done', Real: false }).count();
-    const countMisreporting = await labelCL.where({ Misreporting: true, status: 'done', Real: false }).count();
-    const countNoReference = await labelCL.where({ NoReference: true, status: 'done', Real: false }).count();
-    const countSharePost = await labelCL.where({ SharePost: true, status: 'done', Real: false }).count();
-    const countVideoPost = await labelCL.where({ Video: true, status: 'done', Real: false }).count();
-    const countDeletedPost = await labelCL.where({ Deleted: true, status: 'done', Real: false }).count();
+    const countSatire = await labelCL.where({ Satire: true, status: 'done'}).count();
+    const countFalseNews = await labelCL.where({ FalseNews: true, status: 'done'}).count();
+    const countCommentary = await labelCL.where({ Commentary: true, status: 'done'}).count();
+    const countPersuasive = await labelCL.where({ Persuasive: true, status: 'done'}).count();
+    const countPolarizing = await labelCL.where({ Polarizing: true, status: 'done'}).count();
+    const countMisreporting = await labelCL.where({ Misreporting: true, status: 'done'}).count();
+    const countNoReference = await labelCL.where({ NoReference: true, status: 'done'}).count();
+    const countSharePost = await labelCL.where({ SharePost: true, status: 'done'}).count();
+    const countExcludePost = await labelCL.where({ Exclude: true, status: 'done'}).count();
     const label = {
         Satire: countSatire,
         FalseNews: countFalseNews,
@@ -305,8 +304,7 @@ router.get("/labelCategoryCount", async (req, res) => {
         Misreporting: countMisreporting,
         NoReference: countNoReference,
         SharePost: countSharePost,
-        Video: countVideoPost,
-        Deleted: countDeletedPost
+        Exclude: countExcludePost
     }
     res.status(200).json({ labelCategory: label });
 });
