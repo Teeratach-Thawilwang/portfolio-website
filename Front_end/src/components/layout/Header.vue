@@ -5,9 +5,9 @@
         <a href="/"><img src="@/assets/home/profile.jpg" alt="" /></a>
       </div>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/research">Research</a></li>
-        <li v-if="getLoginStatus"><a href="/label">Label</a></li>
+        <li><a @click.prevent="clickRoute('/')" href="/">Home</a></li>
+        <li><a @click.prevent="clickRoute('/research')" href="/research">Research</a></li>
+        <li v-if="getLoginStatus"><a @click.prevent="clickRoute('/label')" href="/label">Label</a></li>
         <li v-if="getLoginStatus" @click="setLogoutStatus()">
           <a href="#">Logout</a>
         </li>
@@ -70,6 +70,9 @@ export default {
       this.cookies.remove("session");
       this.$router.push('/')
     },
+    clickRoute(url) {
+      this.$router.push(url);
+    }
   },
   mounted() {
     this.loginStatus = this.$store.getters.getLoginState;

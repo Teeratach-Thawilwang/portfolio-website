@@ -159,6 +159,7 @@ export default {
     // console.log("on mounted");
     this.scrollCommentDown();
     this.autoSetNickname();
+    this.$socket.connect();
   },
   updated() {
     // console.log("on update");
