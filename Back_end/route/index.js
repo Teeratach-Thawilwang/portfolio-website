@@ -267,10 +267,10 @@ router.get("/labelCount/:status", async (req, res) => {
     const body = req.params;
     if (body.status == 'done') {
         const Real = await labelCL
-            .where({ Real: true, status: 'done' })
+            .where({ Real: true, status: 'done', Exclude: false })
             .count();
         const Fake = await labelCL
-            .where({ Real: false, status: 'done' })
+            .where({ Real: false, status: 'done', Exclude: false })
             .count();
         res.status(200).json({ data: { Real: Real, Fake: Fake } });
     } else {
